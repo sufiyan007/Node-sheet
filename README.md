@@ -269,17 +269,45 @@ Deployment<br>
 </table>
 </div>
 
-
-# 💎 Node.js Backend Mastery Roadmap — Part 2
-
-> 🚀 Beautifully structured, wide-layout, fully collapsible roadmap — **Part 2 continues from Part 1**.
-
 ---
+<details>
+<summary><strong>🟦 Phase 1: Node.js Core Concepts</strong></summary>
 
-# 📘 Detailed Phases (Continued)
+- [ ] **What is Node.js**
+- [ ] **How Node Works (V8 + Libuv)**
+- [ ] **Event Loop**
+  - Call Stack  
+  - Callback Queue  
+  - Microtask Queue  
+- [ ] **Libuv & Thread Pool**
+  - CPU vs IO  
+  - Blocking vs Non-Blocking  
+- [ ] **Streams**
+  - Readable  
+  - Writable  
+  - Pipe  
+- [ ] **Buffers**
+- [ ] **File Handling (fs)**
+- [ ] **Modules (CommonJS / ES Modules)**
+- [ ] **Error Handling**
+  - Async Errors  
+  - Global Errors  
 
+</details>
 ---
+<details>
+<summary><strong>🟩 Phase 2: HTTP & Core Servers</strong></summary>
 
+- [ ] **HTTP Basics**
+- [ ] **Creating HTTP Server**
+- [ ] **Handling URL & Params**
+- [ ] **HTTP Methods (GET, POST, PUT, DELETE)**
+- [ ] **HTTP Headers**
+- [ ] **Status Codes**
+- [ ] **req & res Streams**
+
+</details>
+---
 <details>
 <summary><strong>🟧 Phase 3: Building Scalable REST APIs</strong></summary>
 
