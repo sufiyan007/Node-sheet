@@ -86,4 +86,84 @@ timeout
 Now sync code is done.
 
 ---
+## 4️⃣ Libuv & Thread Pool
 
+
+## 🔵 CPU vs IO Tasks (Super Simple)
+
+### **IO Tasks**
+Examples:
+- Reading/writing files  
+- Network requests  
+- Database queries  
+- Timers  
+
+✔️ Fast for CPU, slow because they wait on external systems  
+✔️ Handled by **libuv + OS**, not JavaScript  
+✔️ **Do NOT block** the main thread  
+✔️ Node continues running other code smoothly  
+
+---
+
+### **CPU Tasks**
+Examples:
+- bcrypt hashing  
+- crypto operations  
+- gzip compression  
+- image processing  
+- heavy JSON parsing  
+
+❗ Heavy computation work  
+❗ Executed inside **libuv's thread pool**  
+❗ Too many CPU tasks → thread pool busy → slower API responses  
+
+---
+
+## 🔵 Blocking vs Non-Blocking
+
+### **Non-Blocking (Recommended)**
+```js
+fs.readFile("file.txt", () => {});
+```
+✔️ Work done by libuv  
+✔️ Event loop free  
+✔️ Node handles thousands of requests  
+✔️ Callback runs later  
+
+---
+
+### **Blocking (Avoid in backend)**
+```js
+fs.readFileSync("file.txt");
+```
+❌ Main thread freezes until file completes  
+❌ Stops entire event loop  
+❌ Only one request runs at a time  
+❌ Causes slowdowns under load  
+
+---
+
+## 🔵 UV_THREADPOOL_SIZE (Why This Matters)
+
+- Node’s libuv thread pool has **4 threads by default**
+- These threads handle CPU-heavy async tasks like:
+  - bcrypt hashing  
+  - crypto.pbkdf2  
+  - gzip compression  
+  - some fs operations  
+  - DNS lookups  
+
+---
+
+### **Increase thread pool size if your app does heavy CPU work**
+```js
+process.env.UV_THREADPOOL_SIZE = 32;
+```
+
+Useful when:
+- Many users logging in at once (bcrypt heavy)
+- File processing service
+- Compression/encryption pipelines
+- High concurrency with CPU-based tasks
+
+---
