@@ -252,3 +252,240 @@ Use pipe() when:
 
 ---
 
+## 6️⃣ File System (fs) 
+
+The `fs` module in Node.js allows you to interact with the computer’s file system. It lets you read files, write files, delete files, create folders, list folders, stream large files, and work with file metadata — all using JavaScript.
+
+Just like streams and buffers help Node process data efficiently, the file system module lets Node talk to your disk without blocking the main thread. Most operations in `fs` have two versions:
+
+1. **Synchronous (blocking)** → `fs.readFileSync()`
+2. **Asynchronous (non-blocking)** → `fs.readFile()`
+
+As a backend developer, always prefer **asynchronous versions** because they allow Node to handle more requests without freezing.
+
+## 1. Why File System Exists 
+
+Node.js runs outside the browser, so it needs direct access to the OS — especially the file system, which stores:
+
+- configuration  
+- logs  
+- temporary files  
+- data exports  
+- uploaded images/videos  
+- static content  
+
+The `fs` module is the bridge between Node.js and the operating system’s disk.
+
+## 2. How Node Reads a File Internally
+
+When you run:
+
+```js
+fs.readFile("a.txt", "utf8", (err, data) => {
+  console.log(data);
+});
+```
+
+What happens internally:
+
+- JavaScript registers the read operation.  
+- Hands it to **libuv** (NOT V8).  
+- libuv requests the OS to read the file.  
+- File is read into **buffers** behind the scenes.  
+- When finished, your callback is executed.  
+- Data is returned as string (if encoding is set) or Buffer.
+
+## 3. Reading Files
+
+### a. Asynchronous (Recommended)
+```js
+const fs = require("fs");
+
+fs.readFile("data.txt", "utf8", (err, data) => {
+  if (err) throw err;
+  console.log("File content:", data);
+});
+```
+
+### b. Synchronous (Blocking)
+```js
+const data = fs.readFileSync("data.txt", "utf8");
+console.log(data);
+```
+
+### c. Reading as Buffer
+```js
+fs.readFile("image.png", (err, data) => {
+  console.log(data); // <Buffer ... >
+});
+```
+
+## 4. Writing Files
+
+### a. Create or Replace File
+```js
+fs.writeFile("note.txt", "Hello!", (err) => {
+  if (err) throw err;
+});
+```
+
+### b. Append to File
+```js
+fs.appendFile("note.txt", "More text\n", (err) => {
+  if (err) throw err;
+});
+```
+
+## 5. File Metadata (Stats)
+
+```js
+fs.stat("a.txt", (err, stats) => {
+  console.log(stats);
+});
+```
+
+Useful methods:
+
+- `stats.size`
+- `stats.birthtime`
+- `stats.mtime`
+- `stats.isFile()`
+- `stats.isDirectory()`
+
+## 6. Working With Directories
+
+### a. Create Folder
+```js
+fs.mkdir("myfolder", (err) => {
+  if (err) throw err;
+});
+```
+
+### b. Create Nested Folders
+```js
+fs.mkdir("a/b/c", { recursive: true }, (err) => {
+  if (err) throw err;
+});
+```
+
+### c. Read Folder (readdir)
+Folder contains:
+```
+a.txt
+b.txt
+img.png
+```
+
+```js
+fs.readdir("./", (err, files) => {
+  console.log(files);
+});
+```
+
+Output:
+```
+[ 'a.txt', 'b.txt', 'img.png' ]
+```
+
+### d. Remove Folder
+```js
+fs.rmdir("myfolder", (err) => {
+  if (err) throw err;
+});
+```
+
+## 7. Deleting Files
+
+```js
+fs.unlink("a.txt", (err) => {
+  if (err) throw err;
+});
+```
+
+## 8. Renaming Files
+
+```js
+fs.rename("old.txt", "new.txt", (err) => {
+  if (err) throw err;
+});
+```
+
+## 9. Streaming Large Files (createReadStream)
+
+```js
+const stream = fs.createReadStream("big.txt", "utf8");
+
+stream.on("data", (chunk) => {
+  console.log("Chunk:", chunk);
+});
+
+stream.on("end", () => {
+  console.log("Done!");
+});
+```
+
+## 10. Streaming Write (createWriteStream)
+
+```js
+const ws = fs.createWriteStream("copy.txt");
+
+ws.write("Hello\n");
+ws.write("World\n");
+ws.end();
+```
+## 11. Copying Files (Efficient)
+
+```js
+fs.createReadStream("a.txt").pipe(
+  fs.createWriteStream("b.txt")
+);
+```
+
+## 12. Checking If File Exists
+
+### a. Old way
+```js
+fs.existsSync("a.txt");
+```
+
+### b. Better way
+```js
+fs.access("a.txt", (err) => {
+  if (err) console.log("Not found");
+});
+```
+
+## 13. Watching Files (Auto Reload)
+
+```js
+fs.watch("log.txt", () => {
+  console.log("File changed!");
+});
+```
+
+## 14. Extra Useful Methods
+
+### a. readFile with try/catch
+```js
+async function read() {
+  try {
+    const data = await fs.promises.readFile("file.txt", "utf8");
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+}
+```
+
+### b. writeFile with promises
+```js
+await fs.promises.writeFile("output.txt", "Hello!");
+```
+
+### c. copyFile
+```js
+fs.copyFile("a.txt", "b.txt", () => {});
+```
+
+---
+
