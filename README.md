@@ -269,619 +269,663 @@ Deployment<br>
 </table>
 </div>
 
----
-<details>
-<summary><strong>🟦 Phase 1: Node.js Core Concepts</strong></summary>
+# 💎 Node.js Backend Mastery Roadmap (3 Years Experience)
 
-- [ ] **What is Node.js**
-- [ ] **How Node Works (V8 + Libuv)**
-- [ ] **Event Loop**
-  - Call Stack  
-  - Callback Queue  
-  - Microtask Queue  
-- [ ] **Libuv & Thread Pool**
-  - CPU vs IO  
-  - Blocking vs Non-Blocking  
-- [ ] **Streams**
-  - Readable  
-  - Writable  
-  - Pipe  
-- [ ] **Buffers**
-- [ ] **File Handling (fs)**
-- [ ] **Modules (CommonJS / ES Modules)**
-- [ ] **Error Handling**
-  - Async Errors  
-  - Global Errors  
-
-</details>
----
-<details>
-<summary><strong>🟩 Phase 2: HTTP & Core Servers</strong></summary>
-
-- [ ] **HTTP Basics**
-- [ ] **Creating HTTP Server**
-- [ ] **Handling URL & Params**
-- [ ] **HTTP Methods (GET, POST, PUT, DELETE)**
-- [ ] **HTTP Headers**
-- [ ] **Status Codes**
-- [ ] **req & res Streams**
-
-</details>
----
-<details>
-<summary><strong>🟧 Phase 3: Building Scalable REST APIs</strong></summary>
-
-### ✔️ API Principles  
-- CRUD  
-- Idempotent methods  
-- Status codes  
-- Consistent structure (success/error format)
-
-### ✔️ Pagination / Filtering / Sorting  
-- limit, offset  
-- page, perPage  
-- sort by fields  
-- search & filtering patterns
-
-### ✔️ API Versioning  
-- `/api/v1`  
-- `/api/v2`
-
-### ✔️ File Uploads  
-- Multer (disk/memory)  
-- S3 uploads (buffer/stream)
-
-### ✔️ Validation  
-- JOI / Zod / Yup  
-- Sanitization  
-- Preventing injection  
-
-</details>
+> 🚀 A beautifully structured, collapsible, and wide-layout roadmap to master **Node.js backend development**.
 
 ---
 
-<details>
-<summary><strong>🟥 Phase 4: Authentication & Authorization</strong></summary>
+## 📊 Overall Progress Dashboard
 
-### ✔️ JWT (Access + Refresh Tokens)
-- Access token flow  
-- Rotation  
-- Expiration  
-- Storing tokens securely  
+<div style="width:100%; overflow-x:auto;">
 
-### ✔️ Password Security (bcrypt)
-- Hashing  
-- Salting  
-- Reset flows  
+<table style="width:100%; table-layout:fixed;">
+  <tr>
+    <th style="width:10%">🚀 Phase</th>
+    <th style="width:20%">🧠 Topics</th>
+    <th style="width:45%">🧩 Sub Topics</th>
+    <th style="width:15%">🏁 Status</th>
+    <th style="width:10%">🔢 Total</th>
+  </tr>
 
-### ✔️ RBAC (Role Based Access)
-- Roles: admin / user / guest  
-- Permission middleware  
+  <!-- PHASE 1 -->
+  <tr>
+    <td><a href="#phase-1">Phase 1</a></td>
+    <td>Node.js Core Concepts</td>
+    <td>
+      What is Node.js<br>
+      How Node Works<br>
+      Event Loop<br>
+      Libuv Thread Pool<br>
+      Streams<br>
+      Buffers<br>
+      File System<br>
+      Error Handling
+    </td>
+    <td>⏳ In Progress</td>
+    <td>8</td>
+  </tr>
 
-### ✔️ OAuth Basics  
-- Google Login  
-- GitHub Login  
-- Token exchange  
+  <!-- PHASE 2 -->
+  <tr>
+    <td><a href="#phase-2">Phase 2</a></td>
+    <td>HTTP & Core Servers</td>
+    <td>
+      HTTP Basics<br>
+      HTTP Server<br>
+      URL Handling<br>
+      Methods<br>
+      Headers<br>
+      Status Codes<br>
+      req/res Streams
+    </td>
+    <td>⏳ In Progress</td>
+    <td>7</td>
+  </tr>
 
-</details>
+  <!-- PHASE 3 -->
+  <tr>
+    <td><a href="#phase-3">Phase 3</a></td>
+    <td>REST API Design</td>
+    <td>
+      CRUD<br>
+      Idempotent Methods<br>
+      Pagination<br>
+      Versioning<br>
+      File Uploads<br>
+      Validation
+    </td>
+    <td>⏳ In Progress</td>
+    <td>6</td>
+  </tr>
+
+  <!-- PHASE 4 -->
+  <tr>
+    <td><a href="#phase-4">Phase 4</a></td>
+    <td>Auth & Authorization</td>
+    <td>
+      JWT<br>
+      Refresh Tokens<br>
+      Password Hashing<br>
+      Cookies / Sessions<br>
+      OAuth<br>
+      RBAC<br>
+      Authorization Header
+    </td>
+    <td>⏳ In Progress</td>
+    <td>7</td>
+  </tr>
+
+  <!-- PHASE 5 -->
+  <tr>
+    <td><a href="#phase-5">Phase 5</a></td>
+    <td>Databases</td>
+    <td>
+      MongoDB<br>
+      Mongoose<br>
+      SQL Basics<br>
+      Indexing<br>
+      Transactions<br>
+      Migrations
+    </td>
+    <td>⏳ In Progress</td>
+    <td>6</td>
+  </tr>
+
+  <!-- PHASE 6 -->
+  <tr>
+    <td><a href="#phase-6">Phase 6</a></td>
+    <td>Caching</td>
+    <td>
+      Redis<br>
+      TTL<br>
+      Invalidation<br>
+      Rate Limiting<br>
+      Sessions
+    </td>
+    <td>⏳ In Progress</td>
+    <td>5</td>
+  </tr>
+
+  <!-- PHASE 7 -->
+  <tr>
+    <td><a href="#phase-7">Phase 7</a></td>
+    <td>Performance Optimization</td>
+    <td>
+      Event Loop Blocking<br>
+      Worker Threads<br>
+      Streams<br>
+      Cluster<br>
+      Profiling<br>
+      Scalability
+    </td>
+    <td>⏳ In Progress</td>
+    <td>6</td>
+  </tr>
+
+  <!-- PHASE 8 -->
+  <tr>
+    <td><a href="#phase-8">Phase 8</a></td>
+    <td>Logging & Monitoring</td>
+    <td>
+      Pino<br>
+      Winston<br>
+      Health Checks<br>
+      PM2 Monitoring<br>
+      Remote Logging
+    </td>
+    <td>⏳ In Progress</td>
+    <td>5</td>
+  </tr>
+
+  <!-- PHASE 9 -->
+  <tr>
+    <td><a href="#phase-9">Phase 9</a></td>
+    <td>Security</td>
+    <td>
+      SQL Injection<br>
+      NoSQL Injection<br>
+      XSS<br>
+      CSRF<br>
+      HTTPS<br>
+      JWT Security
+    </td>
+    <td>⏳ In Progress</td>
+    <td>6</td>
+  </tr>
+
+  <!-- PHASE 10 -->
+  <tr>
+    <td><a href="#phase-10">Phase 10</a></td>
+    <td>Testing</td>
+    <td>
+      Jest<br>
+      Supertest<br>
+      Controller Tests<br>
+      Service Tests<br>
+      DB Mocking
+    </td>
+    <td>⏳ In Progress</td>
+    <td>5</td>
+  </tr>
+
+  <!-- PHASE 11 -->
+  <tr>
+    <td><a href="#phase-11">Phase 11</a></td>
+    <td>Deployment</td>
+    <td>
+      Linux<br>
+      PM2<br>
+      NGINX<br>
+      SSL<br>
+      AWS EC2/S3/RDS<br>
+      CI/CD
+    </td>
+    <td>⏳ In Progress</td>
+    <td>6</td>
+  </tr>
+
+  <!-- PHASE 12 -->
+  <tr>
+    <td><a href="#phase-12">Phase 12</a></td>
+    <td>File System & Streams</td>
+    <td>
+      fs Module<br>
+      Streams<br>
+      Buffers<br>
+      Backpressure<br>
+      TCP Networking
+    </td>
+    <td>⏳ In Progress</td>
+    <td>5</td>
+  </tr>
+
+  <!-- PHASE 13 -->
+  <tr>
+    <td><a href="#phase-13">Phase 13</a></td>
+    <td>Node Architecture</td>
+    <td>
+      MVC<br>
+      Clean Architecture<br>
+      Event Driven Architecture<br>
+      Module Patterns
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 14 -->
+  <tr>
+    <td><a href="#phase-14">Phase 14</a></td>
+    <td>Advanced Express</td>
+    <td>
+      Middleware Patterns<br>
+      Rate Limiting<br>
+      Error Handlers<br>
+      Build Mini Express
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 15 -->
+  <tr>
+    <td><a href="#phase-15">Phase 15</a></td>
+    <td>MongoDB Advanced</td>
+    <td>
+      Aggregation<br>
+      Indexing<br>
+      Transactions<br>
+      System Designs
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 16 -->
+  <tr>
+    <td><a href="#phase-16">Phase 16</a></td>
+    <td>SQL Advanced</td>
+    <td>
+      Query Optimization<br>
+      Joins Deep Dive<br>
+      Transactions<br>
+      Views & MViews
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 17 -->
+  <tr>
+    <td><a href="#phase-17">Phase 17</a></td>
+    <td>Message Queues</td>
+    <td>
+      RabbitMQ<br>
+      Bull<br>
+      Background Jobs<br>
+      Retry Logic
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 18 -->
+  <tr>
+    <td><a href="#phase-18">Phase 18</a></td>
+    <td>Cloud & DevOps</td>
+    <td>
+      AWS Basics<br>
+      Docker<br>
+      Kubernetes<br>
+      Reverse Proxies
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 19 -->
+  <tr>
+    <td><a href="#phase-19">Phase 19</a></td>
+    <td>System Design</td>
+    <td>
+      Notifications<br>
+      Rate Limiter<br>
+      Real-Time Chat<br>
+      File Upload Service
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 20 -->
+  <tr>
+    <td><a href="#phase-20">Phase 20</a></td>
+    <td>Real-Time WebSockets</td>
+    <td>
+      Socket.io<br>
+      ws<br>
+      Broadcasting<br>
+      Scaling
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+  <!-- PHASE 21 -->
+  <tr>
+    <td><a href="#phase-21">Phase 21</a></td>
+    <td>Node Internals</td>
+    <td>
+      V8 Engine<br>
+      Libuv Deep Dive<br>
+      Event Loop Internals<br>
+      Native Addons
+    </td>
+    <td>⏳ In Progress</td>
+    <td>4</td>
+  </tr>
+
+</table>
+
+</div>
 
 ---
 
-<details>
-<summary><strong>🟫 Phase 5: Databases & Querying</strong></summary>
-
-### ✔️ PostgreSQL / MySQL
-- Relationships  
-- Joins  
-- Indexes (B-Tree, Hash)  
-- Transactions  
-- Isolation levels  
-
-### ✔️ MongoDB
-- Document modeling  
-- Aggregation pipeline  
-- Indexing  
-- Avoiding large docs  
-
-### ✔️ Schema Design
-- Embed vs Reference  
-- Optimizing reads vs writes  
-
-### ✔️ ORM / ODM
-- Prisma  
-- Sequelize  
-- Mongoose  
-
-### ✔️ Migrations
-- Version control  
-- Rollback  
-- CI/CD migrations  
-
-</details>
+# 📘 Detailed Phases (Collapsible Sections)
 
 ---
 
+## 🟦 Phase 1: Node.js Core Concepts {#phase-1}
 <details>
-<summary><strong>🟪 Phase 6: Caching</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-### ✔️ Redis  
-- Strings  
-- Hashes  
-- Lists  
-- Pub/Sub  
+## ✔️ What is Node.js  
+## ✔️ How Node Works (V8 + Libuv)  
 
-### ✔️ TTL (Expiry)
-- Short/medium/long caches  
-- Auto invalidation  
+## ✔️ Event Loop
+- Call Stack  
+- Callback Queue  
+- Microtask Queue  
+- Event Loop Phases  
+- Async Internals  
 
-### ✔️ Cache Invalidation
-- delete on write  
-- stale-while-revalidate  
-- background refresh  
+## ✔️ Libuv & Thread Pool
+- CPU vs IO  
+- Blocking vs Non-Blocking  
+- UV_THREADPOOL_SIZE  
 
-### ✔️ Sessions  
-- Redis-based login sessions  
-
-### ✔️ Rate Limiting  
-- IP-based rate limit  
-- Redis counter strategy  
-
-</details>
-
----
-
-<details>
-<summary><strong>🟦 Phase 7: Performance Optimization</strong></summary>
-
-### ✔️ Avoid Event Loop Blocking  
-- Detect blocking using clinic.js  
-- Replace CPU-heavy logic with workers  
-
-### ✔️ Worker Threads  
-- Offload hashing  
-- Offload compression  
-
-### ✔️ Streams  
-- Avoid reading full files into memory  
-- Use pipe/pipeline  
-
-### ✔️ Cluster Mode  
-- Round-robin  
-- PM2 cluster mode  
-
-### ✔️ Profiling  
-- CPU profiling  
-- Heap snapshots  
-- Memory leak tracing  
-
-### ✔️ Scalability  
-- Horizontal scaling  
-- Stateless servers  
-- DB connection pooling  
-
-</details>
-
----
-
-<details>
-<summary><strong>🟩 Phase 8: Logging & Monitoring</strong></summary>
-
-### ✔️ Logging  
-- Pino  
-- Winston  
-
-### ✔️ Monitoring  
-- Health check endpoints  
-- PM2 Monitoring Dashboard  
-
-### ✔️ Log Rotation  
-- Daily rotate files  
-- Cloud logs  
-
-### ✔️ Remote Logging  
-- AWS CloudWatch  
-- ELK Stack basics  
-
-</details>
-
----
-
-<details>
-<summary><strong>🟥 Phase 9: Security Essentials</strong></summary>
-
-### ✔️ SQL Injection Prevention  
-- use placeholders  
-- use ORM safe queries  
-
-### ✔️ NoSQL Injection  
-- prevent user-controlled operators  
-
-### ✔️ XSS  
-- output sanitization  
-
-### ✔️ CSRF  
-- CSRF tokens  
-- SameSite cookies  
-
-### ✔️ HTTPS  
-- SSL  
-- Certbot setup  
-
-### ✔️ JWT Security  
-- short expiry  
-- signature validation  
-- no sensitive data in tokens  
-
-</details>
-
----
-
-<details>
-<summary><strong>🟨 Phase 10: Testing</strong></summary>
-
-### ✔️ Jest  
-- unit tests  
-- mocks  
-- spies  
-
-### ✔️ Supertest  
-- integration tests  
-
-### ✔️ Controller Tests  
-- API response  
-- status codes  
-
-### ✔️ Service Layer Tests  
-- pure logic  
-
-### ✔️ DB Mocking  
-- In-memory database  
-- Mock DB calls  
-
-</details>
-
----
-
-<details>
-<summary><strong>🟫 Phase 11: Deployment Skills</strong></summary>
-
-### ✔️ Linux Basics  
-- SSH  
-- SCP  
-- Permissions  
-
-### ✔️ PM2  
-- process management  
-- cluster mode  
-
-### ✔️ NGINX  
-- reverse proxy  
-- load balancing  
-
-### ✔️ SSL Certificates  
-- Certbot  
-- Renewals  
-
-### ✔️ AWS (Node-Focused)  
-- EC2 deployment  
-- S3 uploads  
-- RDS DB connection  
-- Load balancer setup  
-
-### ✔️ CI/CD  
-- GitHub Actions  
-- Build → Test → Deploy  
-
-</details>
-
----
-
-<details>
-<summary><strong>🟦 Phase 12: File System, Streams, Buffers & Networking</strong></summary>
-
-## ✔️ File System (fs module)
-- readFile / writeFile (sync/async)
-- appendFile
-- file stats (size, type, metadata)
-- folders: mkdir, rmdir, readdir
-- file existence checks
-- fs promises API
-- watching files (fs.watch)
-
-## ✔️ Streams (Deep)
-- Readable streams
-- Writable streams
-- Duplex & Transform streams
-- pipe() vs pipeline()
-- backpressure explained
-- highWaterMark
-- streaming large files (1GB+)
-- stream events: data, end, error, close
+## ✔️ Streams
+- Readable  
+- Writable  
+- Pipe / Pipeline  
 
 ## ✔️ Buffers
-- Buffer.from
-- alloc vs allocUnsafe
-- binary encoding
-- converting to/from strings
-- handling binary files (images, PDFs, audio)
 
-## ✔️ Networking
-- net module (TCP server)
-- building TCP chat server
-- socket communication basics
-- understanding low-level TCP/UDP
-- when to use TCP vs HTTP
+## ✔️ File System (fs)
+
+## ✔️ Error Handling
+- uncaughtException  
+- unhandledRejection  
+- Centralized Handler  
 
 </details>
 
 ---
 
+## 🟩 Phase 2: HTTP & Core Servers {#phase-2}
 <details>
-<summary><strong>🟩 Phase 13: Node Architecture & Design Patterns</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-## ✔️ Architecture Patterns  
-- MVC  
-- Service Layer  
-- Repository Pattern  
-- Dependency Injection  
-- DTO pattern  
-- Clean Architecture  
-- Hexagonal architecture basics  
-
-## ✔️ Event-Driven Architecture  
-- Events  
-- Emitters  
-- Handlers  
-- Pub/Sub  
-- Node EventEmitter internals  
-
-## ✔️ Code Organization  
-- folder-by-feature  
-- controller / service / model split  
-- environment-based configs  
-
-## ✔️ Reusable Modules  
-- module.exports  
-- require vs import  
-- package.json exports  
+## ✔️ HTTP Basics  
+## ✔️ Creating HTTP Server  
+## ✔️ URL & Params Parsing  
+## ✔️ HTTP Methods  
+## ✔️ Headers  
+## ✔️ Status Codes  
+## ✔️ req/res Streams  
 
 </details>
 
 ---
 
+## 🟧 Phase 3: REST API Design {#phase-3}
 <details>
-<summary><strong>🟧 Phase 14: Advance Express + Middleware Patterns</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-## ✔️ Advanced Middlewares
-- factory pattern middlewares
-- composing middleware stacks
-- conditional middleware
-- async error handlers  
-- rate limit middleware  
-- auth middleware  
-- schema validation middleware  
-
-## ✔️ Express Internals  
-- how routing works internally  
-- how middleware chaining works  
-- req/res prototypes  
-- how express handles errors  
-
-## ✔️ Build your own tiny Express  
-- create server using http module  
-- parse URL  
-- parse JSON body  
-- create routing system  
-- create middleware pipeline  
+## ✔️ CRUD Principles  
+## ✔️ Idempotency  
+## ✔️ Pagination / Sorting / Filtering  
+## ✔️ Versioning  
+## ✔️ File Uploads (Multer, S3)  
+## ✔️ JOI / Zod Validation  
 
 </details>
 
 ---
 
+## 🟥 Phase 4: Authentication & Authorization {#phase-4}
 <details>
-<summary><strong>🟥 Phase 15: Node + MongoDB Advanced</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-## ✔️ Aggregation Mastery  
-- match  
-- group  
-- lookup (joins)  
-- sort  
-- facet  
-- project  
-- pagination in aggregation  
+## ✔️ JWT (Access + Refresh)  
+## ✔️ Cookies & Sessions  
+## ✔️ Password Hashing (bcrypt)  
+## ✔️ OAuth (Google/Github)  
+## ✔️ RBAC  
+## ✔️ Authorization Header  
+</details>
 
-## ✔️ Indexing Deep  
-- compound indexes  
-- TTL indexes  
-- partial indexes  
-- text indexes  
-- explain() & query optimization  
+---
 
+## 🟫 Phase 5: Databases & Querying {#phase-5}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ MongoDB  
+## ✔️ Mongoose  
+## ✔️ SQL Basics  
+## ✔️ Indexing  
 ## ✔️ Transactions  
-- multi-document transactions  
-- ACID guarantees  
-- session handling  
-
-## ✔️ Real-World Mongo Design  
-- designing feeds (like Instagram)  
-- designing chat system  
-- designing notifications  
-- designing likes/comments system  
+## ✔️ Migrations  
 
 </details>
 
 ---
 
+## 🟪 Phase 6: Caching {#phase-6}
 <details>
-<summary><strong>🟫 Phase 16: Node + SQL Advanced (PostgreSQL/MySQL)</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Redis  
+## ✔️ TTL  
+## ✔️ Cache Invalidation  
+## ✔️ Rate Limiting  
+## ✔️ Sessions  
+
+</details>
+
+---
+
+## 🟦 Phase 7: Performance Optimization {#phase-7}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Event Loop Blocking  
+## ✔️ Worker Threads  
+## ✔️ Streams  
+## ✔️ Cluster Mode  
+## ✔️ Profiling  
+## ✔️ Scalability  
+
+</details>
+
+---
+
+## 🟩 Phase 8: Logging & Monitoring {#phase-8}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Pino  
+## ✔️ Winston  
+## ✔️ Health Checks  
+## ✔️ PM2 Monitoring  
+## ✔️ Remote Logging  
+
+</details>
+
+---
+
+## 🟥 Phase 9: Security Essentials {#phase-9}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ SQL Injection  
+## ✔️ NoSQL Injection  
+## ✔️ XSS  
+## ✔️ CSRF  
+## ✔️ HTTPS  
+## ✔️ JWT Security  
+
+</details>
+
+---
+
+## 🟨 Phase 10: Testing {#phase-10}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Jest  
+## ✔️ Supertest  
+## ✔️ Controller Tests  
+## ✔️ Service Tests  
+## ✔️ DB Mocking  
+
+</details>
+
+---
+
+## 🟫 Phase 11: Deployment Skills {#phase-11}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Linux  
+## ✔️ PM2  
+## ✔️ NGINX  
+## ✔️ SSL  
+## ✔️ AWS EC2 / S3 / RDS  
+## ✔️ CI/CD Pipelines  
+
+</details>
+
+---
+
+## 🟦 Phase 12: File System, Streams, Buffers & Networking {#phase-12}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ fs Module  
+## ✔️ Streams (Readable / Writable)  
+## ✔️ Buffers  
+## ✔️ Backpressure  
+## ✔️ TCP Networking  
+
+</details>
+
+---
+
+## 🟩 Phase 13: Node Architecture & Design Patterns {#phase-13}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ MVC  
+## ✔️ Clean Architecture  
+## ✔️ Event Driven Architecture  
+## ✔️ Module Patterns  
+
+</details>
+
+---
+
+## 🟧 Phase 14: Advanced Express {#phase-14}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Middleware Patterns  
+## ✔️ Async Error Handling  
+## ✔️ Rate Limiting  
+## ✔️ Building Mini Express  
+
+</details>
+
+---
+
+## 🟥 Phase 15: MongoDB Advanced {#phase-15}
+<details>
+<summary><strong>Click to Expand</strong></summary>
+
+## ✔️ Aggregation  
+## ✔️ Indexing  
+## ✔️ Transactions  
+## ✔️ Real System Design  
+
+</details>
+
+---
+
+## 🟫 Phase 16: SQL Advanced {#phase-16}
+<details>
+<summary><strong>Click to Expand</strong></summary>
 
 ## ✔️ Query Optimization  
-- EXPLAIN / ANALYZE  
-- indexing strategy  
-- avoiding full table scans  
-- covering indexes  
-- composite primary keys  
-
-## ✔️ SQL Joins (Deep)  
-- inner  
-- left  
-- right  
-- full  
-- self join  
-- cross join  
-
+## ✔️ Joins Deep Dive  
 ## ✔️ Transactions  
-- rollback  
-- savepoints  
-- distributed transactions basics  
-
-## ✔️ Views & Materialized Views  
-- difference  
-- performance use cases  
+## ✔️ Materialized Views  
 
 </details>
 
 ---
 
+## 🟦 Phase 17: Message Queues & Background Jobs {#phase-17}
 <details>
-<summary><strong>🟦 Phase 17: Message Queues & Background Jobs</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-## ✔️ Queues  
-- RabbitMQ  
-- Redis Streams  
-- Kafka (basics)  
-
+## ✔️ RabbitMQ  
+## ✔️ BullMQ  
 ## ✔️ Background Jobs  
-- Bull / BullMQ  
-- agenda.js  
-
-## ✔️ When to use queues?  
-- Emails  
-- Notifications  
-- Webhooks  
-- Long-running tasks  
-
-## ✔️ Concepts  
-- producers  
-- consumers  
-- workers  
-- retry logic  
-- dead-letter queues  
+## ✔️ Retry Logic  
 
 </details>
 
 ---
 
+## 🟪 Phase 18: Cloud, DevOps & Infra {#phase-18}
 <details>
-<summary><strong>🟪 Phase 18: Cloud, DevOps & Infra</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
 ## ✔️ AWS  
-- EC2  
-- S3  
-- RDS  
-- CloudFront  
-- SNS / SQS (basics)  
-
 ## ✔️ Docker  
-- Dockerfile  
-- images  
-- containers  
-- volumes  
-- networking  
-
-## ✔️ Kubernetes (Beginner Essentials)  
-- pods  
-- deployments  
-- services  
-- config maps  
-- secrets  
-
-## ✔️ Reverse Proxies  
-- NGINX  
-- Load balancing  
-- Caching headers  
+## ✔️ Kubernetes  
+## ✔️ NGINX Reverse Proxy  
 
 </details>
 
 ---
 
+## 🟨 Phase 19: Real-World System Design {#phase-19}
 <details>
-<summary><strong>🟨 Phase 19: Real-World System Design (Backend-Focused)</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-## ✔️ Node System Design Topics  
-- rate-limiter  
-- notification system  
-- real-time chat  
-- job scheduling system  
-- file-upload service  
-- analytics event pipeline  
-- caching layer architecture  
-
-## ✔️ Scaling Node  
-- API gateway  
-- microservices  
-- stateless services  
-- horizontal scaling  
-
-## ✔️ CAP Theorem  
-- consistency  
-- availability  
-- partition tolerance  
-
-## ✔️ Database Scaling  
-- sharding  
-- replication  
-- read-write splitting  
+## ✔️ Rate Limiter  
+## ✔️ Notification System  
+## ✔️ Real-Time Chat  
+## ✔️ File Upload Service  
 
 </details>
 
 ---
 
+## 🟫 Phase 20: Real-Time & WebSockets {#phase-20}
 <details>
-<summary><strong>🟫 Phase 20: Real-Time & WebSockets</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
 ## ✔️ Socket.io  
-- rooms  
-- namespaces  
-- broadcast  
-- scaling with Redis adapter  
-
-## ✔️ WebSocket Basics  
-- handshake  
-- ws module  
-- custom real-time server  
-
-## ✔️ Real-Time System Examples  
-- live chat  
-- typing indicator  
-- online/offline tracking  
-- live notifications  
+## ✔️ ws Module  
+## ✔️ Broadcasting  
+## ✔️ Scaling WebSockets  
 
 </details>
 
 ---
 
+## 🟧 Phase 21: Advanced Node.js Internals {#phase-21}
 <details>
-<summary><strong>🟧 Phase 21: Advanced Node.js Internals</strong></summary>
+<summary><strong>Click to Expand</strong></summary>
 
-## ✔️ How Node.js Bootstraps  
-- C++ core  
-- initialization  
-- Node APIs  
-
+## ✔️ Node Bootstrapping  
 ## ✔️ V8 Engine  
-- compiler  
-- garbage collection  
-- memory layout  
-
-## ✔️ Libuv Deep Dive  
-- event loop internals  
-- thread pool  
-- async handles  
-
-## ✔️ Node Native Addons  
-- building C++ addons  
-- N-API basics  
+## ✔️ Libuv Internals  
+## ✔️ Native C++ Addons  
 
 </details>
 
