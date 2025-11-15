@@ -25,8 +25,7 @@ JS runs on V8 → async tasks go to libuv → event loop picks callbacks → res
 
 ---
 
-## 3️⃣ Event Loop (Clean Definition)
-# ⚙️ Event Loop — Clean Developer-Friendly Explanation (No Number Format)
+## 3️⃣ Event Loop
 
 When Node.js runs your file, the JavaScript code is first given to the V8 engine, which parses it, compiles it, and converts it into machine code. Once compiled, Node starts executing all synchronous JavaScript on the call stack. The call stack is simply the place where immediate code runs — for example, a console.log("Hi") goes straight to the stack, runs instantly, and is removed. Only one thing runs at a time, because JavaScript is single-threaded.
 
