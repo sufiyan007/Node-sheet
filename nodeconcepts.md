@@ -185,9 +185,7 @@ If the file is empty, `"data"` never fires, but `"end"` fires immediately.
 
 Node does not load entire files into memory. For a 1GB file, Node splits it into chunks (default ~64KB each). Only one chunk exists in memory at a time. Node delivers that chunk, clears it, and loads the next one. This keeps memory safe for large files.
 
----
-
-## ✔ What does `readable.pipe(writable)` actually mean?
+## 1. What does `readable.pipe(writable)` actually mean?
 
 It means: **“Take the chunks coming from this readable stream and send them directly into this writable stream.”**
 
@@ -208,7 +206,7 @@ This means:
 - pipe() forwards them →  
 - writable writes them to disk  
 
-## Why do we use `pipe()`?
+## 2. Why do we use `pipe()`?
 
 Because manually writing this:
 
@@ -230,7 +228,7 @@ So instead of managing all that manually, you write just:
 readable.pipe(writable);
 ```
 
-## 1. What happens in background? (simple)
+## a. What happens in background? (simple)
 
 1. readable emits `"data"`  
 2. pipe listens for chunks  
@@ -241,7 +239,7 @@ readable.pipe(writable);
 7. pipe **resumes** readable  
 8. when readable ends → pipe calls `writable.end()`  
 
-## 2. When should you use `pipe()`?
+## b. When should you use `pipe()`?
 
 Use pipe() when:
 
