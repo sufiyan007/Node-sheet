@@ -5,15 +5,17 @@
 
 ---
 
-## 📊 Overall Progress Dashboard (Full Width)
+## 📊 Overall Progress Dashboard
 
-<table width="100%">
+<div style="width:100%; overflow-x:auto;">
+
+<table style="width:100%; table-layout:fixed;">
   <tr>
-    <th>🚀 Phase</th>
-    <th>🧠 Topics</th>
-    <th>🧩 Sub Topics</th>
-    <th>🏁 Status</th>
-    <th>🔢 Total</th>
+    <th style="width:10%">🚀 Phase</th>
+    <th style="width:20%">🧠 Topics</th>
+    <th style="width:45%">🧩 Sub Topics</th>
+    <th style="width:15%">🏁 Status</th>
+    <th style="width:10%">🔢 Total</th>
   </tr>
 
   <tr>
@@ -173,6 +175,8 @@
     <td>6</td>
   </tr>
 </table>
+
+</div>
 
 ---
 
