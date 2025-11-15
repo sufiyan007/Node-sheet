@@ -164,3 +164,93 @@ Useful when:
 - High concurrency with CPU-based tasks
 
 ---
+
+## 5️⃣ Streams & Buffers
+
+When Node.js works with files, network responses, images, videos, or any large amount of data, it cannot load everything into memory at once. If you use `fs.readFile()` on a 5GB file, Node tries to load all 5GB into RAM. This can easily crash your server when many users request large files at the same time. To prevent memory overload, Node provides **Buffers** and **Streams** — tools that let you handle data piece by piece instead of all at once.
+
+A **Buffer** is a small temporary storage area for raw binary data (bytes). Streams use Buffers internally, which means you don’t manually create Buffers when reading files — Node automatically fills Buffers behind the scenes. When you call `fs.createReadStream("sm.txt")`, Node reads raw bytes into a Buffer first, then converts those bytes into a string only if you specify an encoding (like utf8). If you don’t specify encoding, the `"data"` event gives you a Buffer object directly. These Buffers are stored in Node’s internal memory (in the JS heap area), not on disk; they are cleared as soon as the chunk is processed.
+
+A **Stream** lets data flow chunk by chunk instead of waiting for the entire data to load. This allows Node to start processing immediately, improving speed and memory efficiency. Streams are everywhere in Node: reading files, writing files, HTTP requests, HTTP responses, zipping files, uploading, downloading, and sockets.
+
+A **Readable Stream** is something you read from, such as `fs.createReadStream("bigfile.txt")`.  
+A **Writable Stream** is something you write to, like `fs.createWriteStream("copy.txt")`.  
+Node processes each chunk as it arrives, which keeps memory usage extremely low.
+
+When you call `stream.on("data", callback)`, you’re telling Node:  
+**“Whenever a new chunk arrives, give it to me.”**  
+- `"data"` fires every time a chunk is ready.  
+- `"end"` fires when there is no more data to read.  
+If the file is empty, `"data"` never fires, but `"end"` fires immediately.
+
+Node does not load entire files into memory. For a 1GB file, Node splits it into chunks (default ~64KB each). Only one chunk exists in memory at a time. Node delivers that chunk, clears it, and loads the next one. This keeps memory safe for large files.
+
+---
+
+## ✔ What does `readable.pipe(writable)` actually mean?
+
+It means: **“Take the chunks coming from this readable stream and send them directly into this writable stream.”**
+
+Readable = **source**  
+Writable = **destination**  
+Pipe() = **connection/tunnel between them**
+
+```js
+const readable = fs.createReadStream("bigfile.txt");
+const writable = fs.createWriteStream("copy.txt");
+
+readable.pipe(writable);
+```
+
+This means:
+
+- readable gives chunks →  
+- pipe() forwards them →  
+- writable writes them to disk  
+
+## Why do we use `pipe()`?
+
+Because manually writing this:
+
+```js
+readable.on("data", chunk => writable.write(chunk));
+readable.on("end", () => writable.end());
+```
+
+`pipe()` does this automatically **plus**:
+
+- handles **backpressure**  
+- pauses readable if writable is slow  
+- resumes readable when writable is ready  
+- avoids memory overflow  
+
+So instead of managing all that manually, you write just:
+
+```js
+readable.pipe(writable);
+```
+
+## 1. What happens in background? (simple)
+
+1. readable emits `"data"`  
+2. pipe listens for chunks  
+3. pipe calls `writable.write(chunk)`  
+4. if writable is slow → `write()` returns **false**  
+5. pipe **pauses** readable  
+6. writable fires `"drain"` when ready  
+7. pipe **resumes** readable  
+8. when readable ends → pipe calls `writable.end()`  
+
+## 2. When should you use `pipe()`?
+
+Use pipe() when:
+
+- copying files  
+- downloading → saving  
+- uploading → processing  
+- compressing files  
+- streaming logs  
+- proxying HTTP requests  
+
+---
+
