@@ -94,7 +94,6 @@ Now sync code is done.
 ### **IO Tasks**
 Examples:
 - Reading/writing files  
-- Network requests  
 - Database queries  
 - Timers  
 
@@ -108,8 +107,6 @@ Examples:
 ### **CPU Tasks**
 Examples:
 - bcrypt hashing  
-- crypto operations  
-- gzip compression  
 - image processing  
 - heavy JSON parsing  
 
