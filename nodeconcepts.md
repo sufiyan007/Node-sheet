@@ -26,17 +26,65 @@ JS runs on V8 → async tasks go to libuv → event loop picks callbacks → res
 ---
 
 ## 3️⃣ Event Loop (Clean Definition)
-The Event Loop is the mechanism that decides:
+# ⚙️ Event Loop — Clean Developer-Friendly Explanation (No Number Format)
 
-- what JS code runs now  
-- when async callbacks run  
-- when microtasks run  
-- when timers execute  
-- when I/O events execute  
+When Node.js runs your file, the JavaScript code is first given to the V8 engine, which parses it, compiles it, and converts it into machine code. Once compiled, Node starts executing all synchronous JavaScript on the call stack. The call stack is simply the place where immediate code runs — for example, a console.log("Hi") goes straight to the stack, runs instantly, and is removed. Only one thing runs at a time, because JavaScript is single-threaded.
 
-It enables Node.js to be **non-blocking**, even though JavaScript is single-threaded.
+Whenever your code contains an asynchronous operation such as setTimeout, Promise.then, or fs.readFile, JavaScript doesn’t execute those. Instead, it registers the callback and hands the work to libuv (a C library used internally by Node). Libuv performs the async task in the background while JavaScript continues executing synchronous lines without waiting. This is how Node stays non-blocking.
 
-➡ **(Explained in detail above)**
+After the synchronous part of your code finishes for the current turn, Node begins processing anything waiting in the async queues. Node has three important queues, and each one has a different execution priority:
+
+**process.nextTick()** has the highest priority. Anything scheduled using nextTick runs immediately after the current synchronous code completes. This queue runs before every other queue.
+
+**Microtask Queue** is where Promise.then and queueMicrotask callbacks go. Microtasks run right after nextTick, and they run to completion before Node moves on.
+
+**Macrotask Queue** (also called the callback queue) contains things like setTimeout, setInterval, setImmediate, file system events, and network responses. These run only after nextTick and microtasks finish.
+
+Everything — nextTick, microtasks, macrotasks — eventually gets executed on the call stack, because the call stack is the only place JavaScript can actually run code.
+
+To understand this flow, consider your example:
+
+```js
+console.log("1");
+
+process.nextTick(() => console.log("nextTick"));
+
+Promise.resolve().then(() => console.log("promise"));
+
+setTimeout(() => console.log("timeout"), 0);
+
+console.log("2");
+```
+
+The two console.log statements (1 and 2) run immediately on the call stack because they are synchronous.
+After synchronous execution finishes, Node checks the async queues.
+
+First, the nextTick callback runs because it has the highest priority. So "nextTick" goes to the call stack and gets executed immediately.
+
+Next, Node processes the microtask queue, so the promise callback ("promise") is taken and executed on the call stack.
+
+Finally, after microtasks are done, Node moves to the macrotask queue, where the setTimeout callback is waiting. "timeout" is then executed.
+
+### Final Output:
+```
+1
+2
+nextTick
+promise
+timeout
+```
+
+### Code Table
+
+| Code | What Happens |
+|------|--------------|
+| console.log("1") | Goes to Call Stack → print → removed |
+| process.nextTick(..) | Callback goes to Next Tick Queue |
+| Promise.then(..) | Callback goes to Microtask Queue |
+| setTimeout(..) | Timer → after 0ms → callback goes to Macrotask Queue |
+| console.log("2") | Goes to Call Stack → print → removed |
+
+Now sync code is done.
 
 ---
 
