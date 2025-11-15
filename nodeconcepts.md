@@ -489,3 +489,172 @@ fs.copyFile("a.txt", "b.txt", () => {});
 
 ---
 
+## 7️⃣ Error Handling in Node.js 
+
+Error handling in Node.js is extremely important because Node runs on a single thread.
+If one error is not handled properly, it can crash the entire server.
+A good backend developer must know how to handle:
+
+1. Synchronous errors
+2. Asynchronous callback errors
+3. Promise/async errors
+4. Global process-level errors
+5. HTTP-level errors (API error middleware)
+6. Operational vs Programmer errors
+
+This document explains everything clearly and gives examples you can directly use in production.
+
+## 1. Synchronous Errors
+
+These errors occur during normal execution of code and can be caught using `try/catch`.
+
+### a) Example
+```js
+try {
+  const x = JSON.parse("{ invalid json }");
+} catch (err) {
+  console.log("Invalid JSON:", err.message);
+}
+```
+
+### b) When to use?
+- Parsing JSON
+- Accessing undefined functions
+- Any immediate logic that may fail
+
+## 2. Asynchronous Callback Errors
+
+Old-style Node APIs (callbacks) follow the pattern:
+```
+function(err, data)
+```
+
+### a) Example
+```js
+const fs = require("fs");
+
+fs.readFile("file.txt", "utf8", (err, data) => {
+  if (err) {
+    console.error("Read error:", err.message);
+    return;
+  }
+  console.log(data);
+});
+```
+
+### b) Important
+Always check the first argument (`err`).  
+If you forget → your code may crash silently.
+
+## 3. Handling Errors in Promises
+
+Promises catch errors differently.
+
+### a) Using `.catch()`
+```js
+Promise.resolve()
+  .then(() => {
+    throw new Error("Something failed");
+  })
+  .catch(err => {
+    console.error("Caught:", err.message);
+  });
+```
+## 4. Using async/await
+
+Wrap your async logic inside try/catch.
+
+### a) Example
+```js
+async function run() {
+  try {
+    const data = await fs.promises.readFile("file.txt", "utf8");
+    console.log(data);
+  } catch (err) {
+    console.error("Error:", err.message);
+  }
+}
+
+run();
+```
+## 5. Global Errors (process-level)
+
+Node provides two global handlers:
+
+### a) uncaughtException  
+When a synchronous error is not caught.
+
+```js
+process.on("uncaughtException", err => {
+  console.error("UNCAUGHT EXCEPTION:", err);
+});
+```
+
+### b) unhandledRejection  
+When a Promise is rejected with no `.catch()`.
+
+```js
+process.on("unhandledRejection", err => {
+  console.error("UNHANDLED REJECTION:", err);
+});
+```
+
+---
+
+## 6. Express Error Middleware (API-level)
+
+Every backend developer must know this.
+
+### a) Example
+```js
+app.get("/user", async (req, res, next) => {
+  try {
+    const user = await User.find();
+    res.json(user);
+  } catch (err) {
+    next(err); // Pass to error middleware
+  }
+});
+
+// Error handler middleware
+app.use((err, req, res, next) => {
+  res.status(500).json({
+    status: "error",
+    message: err.message
+  });
+});
+```
+
+## 7. Operational vs Programmer Errors
+
+### a) Operational errors (expected)
+- File not found  
+- Database offline  
+- Network timeouts  
+- Invalid user input  
+
+These should be handled gracefully.
+
+### b) Programmer errors (bugs)
+- Undefined variable  
+- Type errors  
+- Logic errors  
+
+These should not be ignored; fix the code.
+
+## 8. Throwing Custom Errors
+
+### a) Example
+```js
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
+throw new AppError("User not found", 404);
+```
+
+---
+
