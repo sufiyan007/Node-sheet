@@ -476,18 +476,53 @@ Output:
   }
 }
 ```
+---
 
-## 11. Middlewares Used for URL Parsing (VERY IMPORTANT)
+# 🚀 Express Body Parsing & URL Parsing Middlewares 
 
-| Middleware | Use Case | Example |
-|------------|----------|---------|
-| `express.json()` | Parse JSON request bodies | `app.use(express.json())` |
-| `express.urlencoded()` | Parse form-urlencoded data | `app.use(express.urlencoded({ extended: true }))` |
-| `express.raw()` | Parse binary/raw bodies | `app.use(express.raw())` |
-| `express.text()` | Parse plain text | `app.use(express.text())` |
-| `cors()` | Handle cross-origin requests | `app.use(cors())` |
+## 🧩 1. express.json()
 
-These middlewares affect how Express handles incoming **headers, body, and URL parsing**.
+Parses JSON request bodies and converts them into a JavaScript object.
+
+| Middleware            | Use Case                              | Example                  | Before Middleware → req.body                                       | After Middleware → req.body                         |
+|-----------------------|----------------------------------------|---------------------------|---------------------------------------------------------------------|------------------------------------------------------|
+| `express.json()`      | Parse JSON bodies (`application/json`) | `app.use(express.json())` | `'{ "name": "iphone", "color": "black" }'` (string)                 | `{ name: "iphone", color: "black" }` (object)       |
+
+
+## 🧩 2. express.urlencoded()
+
+Parses HTML form data (URL-encoded), typically from `<form method="POST">`.
+
+| Middleware                               | Use Case                               | Example                                        | Before Middleware → req.body                          | After Middleware → req.body                          |
+|-------------------------------------------|------------------------------------------|------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|
+| `express.urlencoded({ extended: true })` | Parse HTML forms (`application/x-www-form-urlencoded`) | `app.use(express.urlencoded({ extended: true }))` | `'product=iphone&color=black'` (string)               | `{ product: "iphone", color: "black" }` (object)      |
+
+
+## 🧩 3. express.raw()
+
+Reads the body as a **raw Buffer** without converting it.
+
+| Middleware        | Use Case                                 | Example                 | Before Middleware → req.body | After Middleware → req.body        |
+|-------------------|-------------------------------------------|--------------------------|-------------------------------|------------------------------------|
+| `express.raw()`   | Read binary/raw data (Stripe webhooks, file chunks) | `app.use(express.raw())` | Raw binary stream             | `<Buffer 21 4a 2f ...>` (Buffer)   |
+
+
+## 🧩 4. express.text()
+
+Reads the body as plain text exactly as sent.
+
+| Middleware        | Use Case               | Example                 | Before Middleware → req.body | After Middleware → req.body                     |
+|-------------------|-------------------------|--------------------------|-------------------------------|--------------------------------------------------|
+| `express.text()`  | Parse plain text (`text/plain`) | `app.use(express.text())` | `'Hello world'` (string)      | `'Hello world'` (string) *(same, but guaranteed)* |
+
+
+## 🧩 5. cors()
+
+Enables Cross-Origin Resource Sharing (CORS) so frontend apps on other domains can call your backend.
+
+| Middleware  | Use Case                              | Example            | Before Middleware                | After Middleware                     |
+|-------------|----------------------------------------|--------------------|----------------------------------|---------------------------------------|
+| `cors()`    | Allow frontend apps from other domains | `app.use(cors())` | Browser blocks request (CORS error) | Browser **allows** request (CORS headers added) |
 
 ---
 4️⃣
