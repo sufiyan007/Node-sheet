@@ -37,7 +37,7 @@
 
   <!-- PHASE 2 -->
   <tr>
-    <td><a href="#phase-2">Phase 2</a></td>
+    <td><a href="https://github.com/sufiyan007/Node-sheet/blob/main/http%26coreserver.md">Phase 2</a></td>
     <td>HTTP & Core Servers</td>
     <td>
       HTTP Basics<br>
