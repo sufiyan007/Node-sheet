@@ -57,15 +57,21 @@
     <td><a href="#phase-3">Phase 3</a></td>
     <td>REST API Design</td>
     <td>
-      CRUD<br>
-      Idempotent Methods<br>
-      Pagination<br>
+      REST Principles<br>
+      CRUD API Design<br>
+      Idempotency<br>
+      Pagination / Filtering / Sorting / Search<br>
+      Request & Response Structure<br>
+      Status Codes<br>
+      Validation (JOI / Zod)<br>
       Versioning<br>
-      File Uploads<br>
-      Validation
+      File Uploads (Multer / S3)<br>
+      Error Handling<br>
+      Rate Limiting<br>
+      Caching (ETag, Redis)
     </td>
     <td>⏳ In Progress</td>
-    <td>6</td>
+    <td>12</td>
   </tr>
 
   <!-- PHASE 4 -->
@@ -332,12 +338,18 @@
 <details>
 <summary><strong>Click to Expand</strong></summary>
 
-## ✔️ CRUD Principles  
+## ✔️ REST Principles  
+## ✔️ CRUD API Design  
 ## ✔️ Idempotency  
-## ✔️ Pagination / Sorting / Filtering  
+## ✔️ Query-Based Operations (Pagination / Filtering / Sorting / Search)  
+## ✔️ Request & Response Structure  
+## ✔️ Status Codes  
+## ✔️ Validation (JOI / Zod)  
 ## ✔️ Versioning  
 ## ✔️ File Uploads (Multer, S3)  
-## ✔️ JOI / Zod Validation  
+## ✔️ Error Handling for APIs  
+## ✔️ Rate Limiting  
+## ✔️ Caching (ETag, Redis)  
 
 </details>
 
