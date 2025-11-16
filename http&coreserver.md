@@ -525,7 +525,208 @@ Enables Cross-Origin Resource Sharing (CORS) so frontend apps on other domains c
 | `cors()`    | Allow frontend apps from other domains | `app.use(cors())` | Browser blocks request (CORS error) | Browser **allows** request (CORS headers added) |
 
 ---
-4️⃣
+
+## 4️⃣ HTTP Headers (Request + Response)
+
+## 1. What Are HTTP Headers?
+
+HTTP headers are key-value pairs sent with every request and response.  
+They carry **metadata** — information *about* the request/response such as content type, client details, caching rules, cookies, authentication, etc.
+
+Headers DO NOT contain the main response body (HTML/JSON).  
+They tell the server/browser *how to interpret* the body.
+
+---
+
+## 2. Request Headers (Sent by Client → Server)
+
+Request headers describe what the client is sending or what it wants.
+
+### Examples & Meaning
+
+### **a. Content-Type**
+Tells the server what format the request body is in.
+
+```
+Content-Type: application/json
+```
+
+Server knows: “Body is JSON, parse it as JSON.”
+
+Other examples:
+
+- `application/x-www-form-urlencoded` (HTML form)
+- `multipart/form-data` (file uploads)
+- `text/plain`
+
+---
+
+### **b. Accept**
+Client tells server which response formats it can accept.
+
+```
+Accept: application/json
+```
+
+---
+
+### **c. Authorization**
+Used for login systems, APIs, JWTs.
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+### **d. User-Agent**
+Identifies the client app or browser.
+
+```
+User-Agent: Mozilla/5.0 Chrome/122
+```
+
+### **e. Cookie**
+Client sends stored cookies back to the server.
+
+```
+Cookie: sessionId=abc123; theme=dark
+```
+
+## 3. Response Headers (Sent by Server → Client)
+
+### **a. Content-Type**
+Server tells client what type of data is being returned.
+
+```
+Content-Type: application/json
+```
+
+### **b. Content-Length**
+Body size in bytes.
+
+### **c. Set-Cookie**
+Server instructs browser to store a cookie.
+
+```
+Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict
+```
+
+### **d. Cache-Control**
+Controls caching behavior.
+
+```
+Cache-Control: no-cache
+```
+
+### **e. Access-Control-Allow-Origin** (CORS)
+Allows cross-domain requests.
+
+```
+Access-Control-Allow-Origin: https://myfrontend.com
+```
+
+## 4. Cookies 
+
+Cookies are small pieces of data stored in the browser.  
+They allow HTTP (stateless) to behave statefully.
+
+### Why cookies exist?
+
+HTTP is stateless → server does NOT remember who the client is.  
+Cookies allow:
+
+- authentication (session IDs, JWT)
+- remembering preferences (theme=dark)
+- tracking carts, user choices
+- sessions across requests
+
+### How cookies are stored?
+
+1. Server sends **Set-Cookie** header.
+2. Browser saves it.
+3. Browser automatically sends the cookie back in the **Cookie** header on every request.
+
+### Cookie Example Flow
+
+**Server sends cookie:**
+
+```
+Set-Cookie: sessionId=abc123; HttpOnly; Secure; Max-Age=3600
+```
+
+**Browser stores it.**
+
+**Browser sends it on every request:**
+
+```
+Cookie: sessionId=abc123
+```
+
+### Cookie Attributes Explained
+
+| Attribute | Meaning |
+|----------|---------|
+| `HttpOnly` | JS cannot read the cookie (XSS protection) |
+| `Secure` | Cookie only sent over HTTPS |
+| `SameSite` | Prevent CSRF (Strict/Lax/None) |
+| `Max-Age` | Expiration time in seconds |
+| `Path` | Which routes send the cookie |
+| `Domain` | Which domain gets the cookie |
+
+### Session Cookie vs Persistent Cookie
+
+- **Session cookies** disappear when browser closes.
+- **Persistent cookies** stay until expiration.
+
+### Accessing Cookies in Express
+
+#### Send cookie:
+
+```js
+res.cookie("sessionId", "abc123", { httpOnly: true });
+```
+
+#### Read cookie:
+
+```js
+app.use(require("cookie-parser")());
+
+app.get("/", (req, res) => {
+  console.log(req.cookies.sessionId);
+});
+```
+
+## 5. Combined Example (Request + Response + Cookies)
+
+### Browser sends request:
+
+```
+GET /profile
+Cookie: sessionId=abc123
+Accept: application/json
+```
+
+### Server responds:
+
+```
+200 OK
+Content-Type: application/json
+```
+
+Body:
+```json
+{ "user": "John" }
+```
+
+## 6. Summary
+
+- Request headers: client → server metadata.
+- Response headers: server → client metadata.
+- Cookies allow authentication, sessions, personalization.
+- Headers control content type, caching, security, CORS, cookies.
+
+---
 5️⃣
 6️⃣
 7️⃣
