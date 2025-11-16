@@ -28,7 +28,7 @@ The client opens a TCP connection to the server’s IP and port (80 for HTTP, 44
 - Client & server agree on encryption keys
 - HTTP messages then flow encrypted
 
-## 3. Node.js http module vs Express
+## 3. Node.js http module
 
 ### Node http module (low-level)
 
@@ -127,15 +127,15 @@ Runs logic and decides the response.
 ### Step 5 — Server sends response
 
 ```
-HTTP/1.1 200 OK
-Content-Type: text/html
-<html>...</html>
+HTTP/1.1 200 OK           //status
+Content-Type: text/html   // headers
+<html>...</html>          // Body
 ```
 
 ### Step 6 — Browser displays result.
 
 ### Important clarification  
-The backend server **is NOT started per request**.  
+The backend server **is NOT started per request** it will alway runs then only accept the request.  
 It is already running 24/7 on the cloud.
 
 ---
@@ -164,6 +164,7 @@ server.listen(3000);
 ```
 
 Raw Node has no routing → manually match URLs.
+From above it is difficulty to handle the routes and hard to manage/understand the code that/s where come the Express.js
 
 ---
 
@@ -226,7 +227,269 @@ Your HTTP server is the entry gate.
 
 ---
 
-3️⃣
+## 3️⃣ URL & Params Parsing (Express.js)
+
+## 1. What Is a URL? (Backend Perspective)
+
+A URL tells the backend what resource the client wants and what details are being passed to process that request.
+
+We use one example everywhere:
+
+`https://amazon.com/products/iphone?color=black&sort=price`
+
+| Part | Meaning |
+|------|---------|
+| `https://` | Protocol (HTTPS) |
+| `amazon.com` | Domain / Host |
+| `/products/iphone` | Path (resource route) |
+| `?color=black&sort=price` | Query Params |
+| `#reviews` | Fragment (never sent to backend) |
+
+### Express URL-related methods
+
+| Method | What it does |
+|--------|--------------|
+| `req.url` | Full URL (path + query) |
+| `req.originalUrl` | URL before middleware changes |
+| `req.path` | Path only |
+| `req.query` | Query parameters |
+| `req.params` | Route/path parameters |
+
+## 2. URL in Express.js
+
+Express splits the URL into meaningful parts automatically.
+
+Example Request:
+
+`GET https://amazon.com/products/iphone?color=black&sort=price`
+
+| Property | What it gives you | Example Value |
+|----------|-------------------|----------------|
+| `req.path` | The URL path | `/products/iphone` |
+| `req.params` | Path params | `{ productName: "iphone" }` |
+| `req.query` | Query params | `{ color: "black", sort: "price" }` |
+| `req.url` | Path + query | `/products/iphone?color=black&sort=price` |
+| `req.originalUrl` | URL before middleware changes | `/products/iphone?color=black&sort=price` |
+
+Example Route:
+
+```js
+app.get("/products/:productName", (req, res) => {
+  res.json({
+    path: req.path,
+    params: req.params,
+    query: req.query,
+    url: req.url,
+    originalUrl: req.originalUrl
+  });
+});
+```
+
+## 3. Path / Route Params (req.params)
+
+Path params extract dynamic values directly from the URL.
+
+Example URL: `/products/iphone`
+
+Route:
+
+```js
+app.get("/products/:productName", (req, res) => {
+  res.send(req.params);
+});
+```
+
+Result:
+
+```json
+{ "productName": "iphone" }
+```
+
+Use path params when identifying a specific resource:
+
+- `/products/:productName`
+- `/orders/:orderId`
+- `/users/:id`
+
+## 4. Query Params (req.query)
+
+Query params provide extra filtering or configuration.
+
+Example:  
+`?color=black&sort=price`
+
+Route:
+
+```js
+app.get("/products/:productName", (req, res) => {
+  res.send(req.query);
+});
+```
+
+Result:
+
+```json
+{
+  "color": "black",
+  "sort": "price"
+}
+```
+
+Common use cases:
+
+- filtering  
+- sorting  
+- pagination  
+
+## 5. Combining Params + Queries
+
+Example URL:  
+`/products/iphone?color=black&sort=price`
+
+Example:
+
+```js
+app.get("/products/:productName", (req, res) => {
+  res.json({
+    params: req.params,
+    query: req.query
+  });
+});
+```
+
+Output:
+
+```json
+{
+  "params": { "productName": "iphone" },
+  "query": { "color": "black", "sort": "price" }
+}
+```
+
+## 6. Optional Route Params
+
+Optional params are used when a route may or may not have a parameter.
+
+Route:
+
+```js
+app.get("/products/:productName?", (req, res) => {
+  res.send(req.params.productName || "No product selected");
+});
+```
+
+### Explanation of `?`:
+
+- `/products` → parameter missing → returns `"No product selected"`
+- `/products/iphone` → parameter present → returns `"iphone"`
+- The URL still matches whether the param exists or not.
+
+This is helpful when:
+
+- You want a default fallback value,
+- You want same handler for list + detailed view.
+
+## 7. Wildcard Routes (*)
+
+Wildcard routes match anything after a prefix.
+
+Example:
+
+```js
+app.get("/products/*", (req, res) => {
+  res.send(req.params[0]);
+});
+```
+
+URL: `/products/images/iphone.jpg`
+
+Output:
+
+```
+images/iphone.jpg
+```
+
+Useful for:
+
+- Serving assets  
+- Catch‑all routes  
+
+## 8. Nested Params / Deep Dynamic URLs
+
+Example URL:  
+`/products/iphone/reviews/5`
+
+Route:
+
+```js
+app.get("/products/:productName/reviews/:reviewId", (req, res) => {
+  res.json(req.params);
+});
+```
+
+Output:
+
+```json
+{
+  "productName": "iphone",
+  "reviewId": "5"
+}
+```
+
+## 9. URL Parsing in Express Internally
+
+Example URL:  
+`/products/iphone?color=black&sort=price`
+
+Express converts it into:
+
+- `path = "/products/iphone"`
+- `params = { productName: "iphone" }`
+- `query = { color: "black", sort: "price" }`
+- `method = "GET"`
+- `url = "/products/iphone?color=black&sort=price"`
+
+## 10. Real‑World Example (Amazon Search)
+
+URL:  
+`https://amazon.com/products/iphone?color=black&sort=price`
+
+Route:
+
+```js
+app.get("/products/:productName", (req, res) => {
+  res.json({
+    product: req.params.productName,
+    filters: req.query
+  });
+});
+```
+
+Output:
+
+```json
+{
+  "product": "iphone",
+  "filters": {
+    "color": "black",
+    "sort": "price"
+  }
+}
+```
+
+## 11. Middlewares Used for URL Parsing (VERY IMPORTANT)
+
+| Middleware | Use Case | Example |
+|------------|----------|---------|
+| `express.json()` | Parse JSON request bodies | `app.use(express.json())` |
+| `express.urlencoded()` | Parse form-urlencoded data | `app.use(express.urlencoded({ extended: true }))` |
+| `express.raw()` | Parse binary/raw bodies | `app.use(express.raw())` |
+| `express.text()` | Parse plain text | `app.use(express.text())` |
+| `cors()` | Handle cross-origin requests | `app.use(cors())` |
+
+These middlewares affect how Express handles incoming **headers, body, and URL parsing**.
+
+---
 4️⃣
 5️⃣
 6️⃣
