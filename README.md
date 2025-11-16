@@ -499,19 +499,6 @@
 
 ---
 
-## 🟦 Phase 17: Message Queues & Background Jobs {#phase-17}
-<details>
-<summary><strong>Click to Expand</strong></summary>
-
-## ✔️ RabbitMQ  
-## ✔️ BullMQ  
-## ✔️ Background Jobs  
-## ✔️ Retry Logic  
-
-</details>
-
----
-
 ## 🟫 Phase 20: Real-Time & WebSockets {#phase-20}
 <details>
 <summary><strong>Click to Expand</strong></summary>
