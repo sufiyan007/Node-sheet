@@ -656,5 +656,7 @@ class AppError extends Error {
 throw new AppError("User not found", 404);
 ```
 
+If you want more details please refer- <a href="https://github.com/sufiyan007/Node-sheet/blob/main/exceptions.md">link</a>
+
 ---
 
