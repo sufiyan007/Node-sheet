@@ -237,76 +237,6 @@
     <td>4</td>
   </tr>
 
-  <!-- PHASE 15 -->
-  <tr>
-    <td><a href="#phase-15">Phase 15</a></td>
-    <td>MongoDB Advanced</td>
-    <td>
-      Aggregation<br>
-      Indexing<br>
-      Transactions<br>
-      System Designs
-    </td>
-    <td>⏳ In Progress</td>
-    <td>4</td>
-  </tr>
-
-  <!-- PHASE 16 -->
-  <tr>
-    <td><a href="#phase-16">Phase 16</a></td>
-    <td>SQL Advanced</td>
-    <td>
-      Query Optimization<br>
-      Joins Deep Dive<br>
-      Transactions<br>
-      Views & MViews
-    </td>
-    <td>⏳ In Progress</td>
-    <td>4</td>
-  </tr>
-
-  <!-- PHASE 17 -->
-  <tr>
-    <td><a href="#phase-17">Phase 17</a></td>
-    <td>Message Queues</td>
-    <td>
-      RabbitMQ<br>
-      Bull<br>
-      Background Jobs<br>
-      Retry Logic
-    </td>
-    <td>⏳ In Progress</td>
-    <td>4</td>
-  </tr>
-
-  <!-- PHASE 18 -->
-  <tr>
-    <td><a href="#phase-18">Phase 18</a></td>
-    <td>Cloud & DevOps</td>
-    <td>
-      AWS Basics<br>
-      Docker<br>
-      Kubernetes<br>
-      Reverse Proxies
-    </td>
-    <td>⏳ In Progress</td>
-    <td>4</td>
-  </tr>
-
-  <!-- PHASE 19 -->
-  <tr>
-    <td><a href="#phase-19">Phase 19</a></td>
-    <td>System Design</td>
-    <td>
-      Notifications<br>
-      Rate Limiter<br>
-      Real-Time Chat<br>
-      File Upload Service
-    </td>
-    <td>⏳ In Progress</td>
-    <td>4</td>
-  </tr>
-
   <!-- PHASE 20 -->
   <tr>
     <td><a href="#phase-20">Phase 20</a></td>
@@ -569,32 +499,6 @@
 
 ---
 
-## 🟥 Phase 15: MongoDB Advanced {#phase-15}
-<details>
-<summary><strong>Click to Expand</strong></summary>
-
-## ✔️ Aggregation  
-## ✔️ Indexing  
-## ✔️ Transactions  
-## ✔️ Real System Design  
-
-</details>
-
----
-
-## 🟫 Phase 16: SQL Advanced {#phase-16}
-<details>
-<summary><strong>Click to Expand</strong></summary>
-
-## ✔️ Query Optimization  
-## ✔️ Joins Deep Dive  
-## ✔️ Transactions  
-## ✔️ Materialized Views  
-
-</details>
-
----
-
 ## 🟦 Phase 17: Message Queues & Background Jobs {#phase-17}
 <details>
 <summary><strong>Click to Expand</strong></summary>
@@ -603,32 +507,6 @@
 ## ✔️ BullMQ  
 ## ✔️ Background Jobs  
 ## ✔️ Retry Logic  
-
-</details>
-
----
-
-## 🟪 Phase 18: Cloud, DevOps & Infra {#phase-18}
-<details>
-<summary><strong>Click to Expand</strong></summary>
-
-## ✔️ AWS  
-## ✔️ Docker  
-## ✔️ Kubernetes  
-## ✔️ NGINX Reverse Proxy  
-
-</details>
-
----
-
-## 🟨 Phase 19: Real-World System Design {#phase-19}
-<details>
-<summary><strong>Click to Expand</strong></summary>
-
-## ✔️ Rate Limiter  
-## ✔️ Notification System  
-## ✔️ Real-Time Chat  
-## ✔️ File Upload Service  
 
 </details>
 
