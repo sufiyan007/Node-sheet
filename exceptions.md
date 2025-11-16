@@ -1,27 +1,4 @@
-# Node.js Error Handling — PRO Course (Complete, with runnable examples)
-
-> Author: Your bro who hates vague docs.  
-> Goal: Make you a pro at Node error handling — *understand why*, *see exactly how to reproduce*, *know what to use and when*.
-
----
-
-## Table of contents
-1. Recap: The Golden Rule  
-2. Quick visual of Node execution (event loop)  
-3. Try / catch — what it does and exactly why it fails for async  
-4. Callbacks (`(err, data)`) — old Node style  
-5. Promises — `.then/.catch`, `Promise.reject` and when rejections are unhandled  
-6. `async/await` — how/why `try/catch` works with `await`  
-7. `unhandledRejection` and `uncaughtException` — deep details & reproducible examples  
-8. Streams & EventEmitter errors (why they escape try/catch)  
-9. Database connection errors — what happens and how to handle them  
-10. Express API errors — `next(err)`, error middleware, `asyncHandler` wrapper  
-11. Best practices: logging, graceful shutdown, restarting process, Sentry/monitoring  
-12. Cheat sheet — one-liners to copy into projects  
-13. Exercises to practice  
-14. Appendix: Promise combinators (all, allSettled, race, any) with examples
-
----
+# Node.js Error Handling 
 
 ## 1 — The Golden Rule (again, short)
 **`try/catch` only catches errors that happen while the `try` block is executing.**  
