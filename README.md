@@ -237,9 +237,9 @@
     <td>4</td>
   </tr>
 
-  <!-- PHASE 20 -->
+  <!-- PHASE 15 -->
   <tr>
-    <td><a href="#phase-20">Phase 20</a></td>
+    <td><a href="#phase-20">Phase 15</a></td>
     <td>Real-Time WebSockets</td>
     <td>
       Socket.io<br>
@@ -251,9 +251,9 @@
     <td>4</td>
   </tr>
 
-  <!-- PHASE 21 -->
+  <!-- PHASE 16 -->
   <tr>
-    <td><a href="#phase-21">Phase 21</a></td>
+    <td><a href="#phase-21">Phase 16</a></td>
     <td>Node Internals</td>
     <td>
       V8 Engine<br>
@@ -499,7 +499,7 @@
 
 ---
 
-## 🟫 Phase 20: Real-Time & WebSockets {#phase-20}
+## 🟫 Phase 15: Real-Time & WebSockets {#phase-15}
 <details>
 <summary><strong>Click to Expand</strong></summary>
 
@@ -512,7 +512,7 @@
 
 ---
 
-## 🟧 Phase 21: Advanced Node.js Internals {#phase-21}
+## 🟧 Phase 16: Advanced Node.js Internals {#phase-16}
 <details>
 <summary><strong>Click to Expand</strong></summary>
 
