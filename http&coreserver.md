@@ -1,4 +1,4 @@
-## 1️⃣ HTTP Basics — Full Detailed Explanation (Clean & Organized)
+## 1️⃣ HTTP 
 
 ## 1. What is HTTP and why is it used?
 
