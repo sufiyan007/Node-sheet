@@ -727,7 +727,229 @@ Body:
 - Headers control content type, caching, security, CORS, cookies.
 
 ---
-5️⃣
-6️⃣
-7️⃣
-8️⃣
+## 5️⃣ HTTP Status Codes 
+
+## 1. HTTP Status Codes
+
+HTTP status codes describe **the result** of a client’s request.  
+Every response MUST include a status code.
+
+### Why status codes matter
+- They tell the client what happened with the request.
+- They help browsers/apps decide next action.
+- They help API consumers handle errors correctly.
+- They help monitoring tools track failures.
+
+---
+
+## 1.1 Status Code Categories (1xx → 5xx)
+
+### 1xx – Informational  
+Request received, processing continues.  
+Rarely used manually.
+
+### 2xx – Success  
+The request was received and processed correctly.
+
+Common ones:
+- **200 OK** → Normal success, return data.
+- **201 Created** → Resource created (POST).  
+  Use when inserting something into DB.
+- **202 Accepted** → Work scheduled (async jobs).
+- **204 No Content** → Success but no body (DELETE).
+
+### 3xx – Redirection  
+Client must take additional action.
+- **301 Moved Permanently**
+- **302 Found**
+- **304 Not Modified** (Used in caching)
+
+### 4xx – Client Errors  
+The client sent a wrong request.
+
+Most important:
+- **400 Bad Request** → Invalid data, JSON parse error.
+- **401 Unauthorized** → Missing/invalid login token.
+- **403 Forbidden** → User authenticated but not allowed.
+- **404 Not Found** → Route/resource missing.
+- **409 Conflict** → Duplicate data (email exists).
+- **429 Too Many Requests** → Rate limiting.
+
+### 5xx – Server Errors  
+The server failed to process a valid request.
+
+Key codes:
+- **500 Internal Server Error** → Unhandled error.
+- **502 Bad Gateway** → Server got invalid response from another service.
+- **503 Service Unavailable** → Server is overloaded/down.
+- **504 Gateway Timeout** → Upstream service timed out.
+
+---
+
+## 1.2 When to Use Each Status Code 
+
+### 200 OK  
+Use for GET success or general success.
+
+### 201 Created  
+Use when you create a new user/order/post.
+
+```js
+res.status(201).json({ id: 1, message: "User created" });
+```
+
+### 204 No Content  
+Use for DELETE:
+
+```js
+res.status(204).send();
+```
+
+### 400 Bad Request  
+Client sent wrong/invalid body.
+
+### 401 Unauthorized  
+Missing token or invalid token.
+
+### 403 Forbidden  
+Correct token but not enough permissions.
+
+Example: Normal user trying to access admin features.
+
+### 404 Not Found  
+Route or DB item missing.
+
+### 409 Conflict  
+Unique field duplicate (e.g., email already exists).
+
+### 429 Too Many Requests  
+When rate limiter blocks client.
+
+### 500 Internal Server Error  
+Unexpected crash inside backend.
+
+---
+
+## 2. req/res Streams (Readable & Writable Streams)
+
+req and res **are streams** because HTTP bodies can be large.  
+Express simplifies body parsing but under the hood, streams always work.
+
+### Why streams?
+- Efficient memory usage  
+- Supports large uploads/downloads  
+- Supports chunk-by-chunk data flow  
+- Enables real-time responses and streaming
+
+---
+
+## 6️⃣ req/res Streams 
+
+2.1 req (IncomingMessage) → Readable Stream
+
+The request body comes **in chunks**, not all at once.
+
+Example:
+
+```js
+let body = "";
+
+req.on("data", chunk => {
+  body += chunk.toString(); // chunk is Buffer
+});
+
+req.on("end", () => {
+  console.log("Full body:", body);
+});
+```
+
+### What comes as a stream?
+- POST JSON body  
+- File uploads  
+- Form data  
+- Any raw binary data  
+
+
+## 2.2 res (ServerResponse) → Writable Stream
+
+The response is sent chunk-by-chunk to the client.
+
+Example:
+
+```js
+res.write("Hello ");
+res.write("World");
+res.end(); // closes stream
+```
+
+### Streaming a file:
+```js
+const fs = require("fs");
+fs.createReadStream("video.mp4").pipe(res);
+```
+
+This:
+- Prevents loading the full file into memory  
+- Handles streaming efficiently  
+
+
+## 3. Streams in Express
+
+Even though Express gives `req.body` directly, internally it still uses streams.
+
+Example (Express JSON middleware):
+
+```js
+app.use(express.json());
+```
+
+This middleware:
+- Reads req stream chunk-by-chunk
+- Converts Buffer → string → JSON
+- Assigns result to req.body
+
+So Express is just doing stream work for you.
+
+
+## 4. When You MUST Understand req/res Streams
+
+### 1. File Uploads  
+multipart/form-data sends files in streams.
+
+### 2. File Downloads  
+Large files must be streamed.
+
+### 3. Proxy Servers  
+Forward client request streams to another server.
+
+### 4. Webhooks  
+Sometimes expect raw body (Stripe, Razorpay).
+
+Example:
+
+```js
+app.use("/stripe-webhook", express.raw({ type: "application/json" }));
+```
+
+### 5. Video Streaming / Range Requests  
+Partial content requires streaming.
+
+
+
+## 5. Real World Example: Streaming a File Download
+
+```js
+app.get("/download", (req, res) => {
+  res.setHeader("Content-Type", "application/pdf");
+
+  const stream = fs.createReadStream("report.pdf");
+  stream.pipe(res);
+});
+```
+
+This:
+- Sends chunks continuously
+- Automatically handles backpressure
+- Prevents memory overload
+
+---
