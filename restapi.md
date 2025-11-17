@@ -44,12 +44,4 @@ A well-designed API organizes these operations using clear resource-based URLs a
 | Update User Partially | PATCH | /users/42 | Updates only selected fields, such as email or name. |
 | Delete User | DELETE | /users/42 | Permanently deletes the user record with ID 42. |
 
-## General Design Notes
-
-- Endpoints should use plural nouns (examples: /users, /orders, /products).  
-- The server returns JSON for requests and responses to maintain consistency.  
-- Validation should check for required fields, data formats, and constraints before creating or updating items.  
-- Errors should follow a consistent structure, such as including a message and an error code.  
-- A created resource typically returns HTTP 201 and may include a `Location` header pointing to the new resource.  
-
 ---
