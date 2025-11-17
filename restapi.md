@@ -46,7 +46,7 @@ A well-designed API organizes these operations using clear resource-based URLs a
 
 ---
 
-# Idempotency
+## 3️⃣ Idempotency
 
 Idempotency describes an operation that produces the same result no matter how many times it is repeated.  
 In API design, this ensures that if a request is accidentally sent multiple times (because of network retries, browser refresh, or client bugs), the server should not duplicate actions or corrupt data.
