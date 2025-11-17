@@ -277,120 +277,176 @@ Cursor pagination is a technique where the server sends a secure encoded token (
 
 This removes the need for page numbers and prevents problems caused by OFFSET. Cursor pagination is fast, stable, and suitable for large datasets and real-time applications.
 
-## Cursor Pagination — Real Meaning
+# Cursor Pagination — Full Developer Explanation
 
-Every page of data ends with a “last item”.  
-Instead of giving the client the raw ID or timestamp of that item, the server provides a secure encoded cursor that internally contains this information.
+This document explains cursor pagination in a clear, developer-friendly way using Amazon as an example. It covers client-side flow, server-side flow, why cursor pagination exists, how it solves offset problems, and provides PostgreSQL + MongoDB code examples.
 
-Example server response:
+---
+
+# 1. How Cursor Pagination Works
+
+Cursor pagination works by using a **position marker** instead of page numbers.  
+When the server sends a page of results, it includes a **cursor**, which represents the last item on that page.
+
+Example flow:
+
+1. Server returns 20 products  
+2. Last product has ID = 500  
+3. Server generates a cursor by encoding this info  
+4. Client requests the next 20 using that cursor  
+5. Server decodes cursor → continues where it left off  
+
+Cursor pagination never breaks even if:
+
+- new products are inserted  
+- old products are deleted  
+- data changes while user is scrolling  
+
+Offset pagination breaks in these scenarios. Cursor pagination does not.
+
+# 2. Why Offset Pagination Breaks
+
+Example:  
+Amazon product IDs:
+
+```
+1 2 3 4 5 6 7 8 9 10
+```
+
+User loads:
+
+```
+GET /products?page=1&limit=5 → [1, 2, 3, 4, 5]
+```
+
+While browsing, **new items arrive**:
+
+```
+100, 101
+```
+
+Now DB becomes:
+
+```
+100 101 1 2 3 4 5 6 7 8 9 10
+```
+
+Next request:
+
+```
+GET /products?page=2&limit=5 → OFFSET 5 → [6,7,8,9,10]
+```
+
+User **missed** items `100` and `101`.
+
+This is why Amazon, Instagram, Twitter, etc. **never use OFFSET**.
+
+---
+
+# 3. Amazon Example — Full Flow
+
+## User searches "iPhone 14"
+
+Frontend calls:
+
+```
+GET /search?q=iphone14&limit=20
+```
+
+## Server processes search
+
+1. Runs full-text search  
+2. Sorts by relevance + createdAt  
+3. Gets last product → assume `{id:98123}`  
+4. Encodes this object as Base64 cursor  
+
+Server responds:
 
 ```json
 {
-  "data": [...],
-  "nextCursor": "eyJpZCI6IjU2Nzg5YWJjIn0="
+  "data": [...20 items...],
+  "nextCursor": "eyJpZCI6OTgxMjMsImNyZWF0ZWRBdCI6IjIwMjUtMTEtMTdUMTA6MDUifQ=="
 }
 ```
 
-This cursor is simply an encoded version of:
+## User scrolls
 
-```json
-{ "id": "56789abc" }
-```
-
-The client then requests the next page:
+Frontend calls:
 
 ```
-GET /products?cursor=eyJpZCI6IjU2Nzg5YWJjIn0=&limit=20
+GET /search?q=iphone14&cursor=eyJpZCI6OTgxMjM...
 ```
 
-When the server receives this cursor, it decodes it and retrieves:
+## Server decodes cursor
 
-- the last ID  
-- the last timestamp (optional)  
-- the point from which the next page should begin  
-
-This makes pagination stable and safe because:
-
-- the client never sees real database IDs  
-- the server hides internal structure  
-- ordering and results remain consistent
-
-Cursor pagination can be understood as:
-
-**Keyset Pagination + Secure Encoding + Client/Server Handshake**
-
-## Why Cursor Pagination Exists
-
-Large real-world systems have problems such as:
-
-- new rows inserted while the user is scrolling  
-- rows deleted while the user is scrolling  
-- different users having different timelines  
-- massive datasets where OFFSET becomes extremely slow
-
-Cursor pagination solves all these issues because it remembers **where the client stopped**, not a page number that may shift over time.
-
-## Cursor Pagination — Client Side
-
-### What the Client Receives
-
-The server typically returns:
-
-- `data`: the actual items  
-- `nextCursor`: a secure token representing the last item  
-- `hasMore`: optional boolean  
-- `next`: optional URL for the next page  
-
-### What the Client Sends Back
-
-```
-cursor=<encoded_value>
-limit=20
+```js
+const decoded = JSON.parse(
+  Buffer.from(cursor, "base64").toString("utf8")
+);
 ```
 
-### What the Client Should Never Do
+Decoded result:
 
-- never decode the cursor  
-- never modify the cursor  
-- never assume it represents an ID  
-- never assume pagination is page-based  
+```
+{id: 98123, createdAt: "2025-11-17T10:05"}
+```
 
-To the client, the cursor is a **black box**.
+Now server knows exactly where to continue.
 
-## Cursor Pagination — Server Side
+---
 
-The server performs several tasks:
+# 4. Cursor Pagination — Client-Side Logic
 
-1. Identify the last item in the current page  
-2. Encode that item’s position into a cursor token  
-3. Send the cursor to the client  
-4. Decode the cursor in the next request  
-5. Fetch the next rows using Keyset conditions  
-6. Regenerate the cursor for the next batch  
-7. Maintain stable ordering  
+Frontend (React-style pseudo-code):
 
-Stable ordering uses combinations like:
+```js
+async function loadProducts(cursor = null) {
+  const url = cursor
+    ? `/search?q=iphone14&limit=20&cursor=${cursor}`
+    : `/search?q=iphone14&limit=20`;
+
+  const res = await fetch(url);
+  const json = await res.json();
+
+  appendToUI(json.data);
+
+  nextCursor = json.nextCursor || null;
+}
+```
+
+Client rules:
+- Never decode cursor  
+- Never modify cursor  
+- Never assume page numbers  
+- Treat cursor as a **black box**  
+
+# 5. Cursor Pagination — Server Side Logic
+
+Server tasks:
+
+1. Decode cursor (if provided)  
+2. Convert timestamp+id into Keyset query  
+3. Fetch next batch  
+4. Create new cursor  
+5. Return to client  
+
+Sorting must always be:
 
 ```
 ORDER BY created_at DESC, id DESC
 ```
 
-## Cursor Encoding — How It Works
+If the sort changes, cursor pagination breaks.
 
-Cursor encoding converts meaningful data (like timestamp + ID) into a safe, opaque string.  
-Common encoding options:
+# 6. Cursor Encoding
 
-- Base64(JSON)  
-- Unsigned JWT  
-- AES encrypted tokens  
-
-Best practice:
+Encoding is usually:
 
 ```
-cursor = base64( JSON.stringify({ createdAt, id }) )
+cursor = base64(JSON.stringify({createdAt, id }))
 ```
 
-### Example JSON
+Example JSON:
 
 ```json
 {
@@ -399,23 +455,23 @@ cursor = base64( JSON.stringify({ createdAt, id }) )
 }
 ```
 
-### Encoded Result
+Encoded cursor:
 
 ```
 eyJjcmVhdGVkQXQiOiIyMDI1LTExLTE3VDEwOjAwOjAwLjAwMFoiLCJpZCI6IjY3NTg0OTMwYWIxMmZlMDFjZDkwNDMyMiJ9
 ```
 
-### Node.js Decode Example
+Decode in Node:
 
 ```js
 const decoded = JSON.parse(
-  Buffer.from(cursor, 'base64').toString('utf8')
+  Buffer.from(cursor, "base64").toString("utf8")
 );
 ```
 
-## Cursor Pagination — PostgreSQL Implementation
+# 7. PostgreSQL Implementation
 
-### Decode Cursor
+## Step 1: Decode
 
 ```js
 const decoded = cursor
@@ -423,17 +479,17 @@ const decoded = cursor
   : null;
 ```
 
-### Build Query
+## Step 2: Query
 
 ```sql
-SELECT id, name, price, created_at
+SELECT id, name, created_at
 FROM products
 WHERE (created_at, id) < ($1, $2)
 ORDER BY created_at DESC, id DESC
 LIMIT $3;
 ```
 
-### Node.js Example
+## Step 3: Node.js
 
 ```js
 const limit = Number(req.query.limit) || 20;
@@ -452,7 +508,7 @@ let query, params;
 
 if (cursor) {
   query = `
-    SELECT id, name, price, created_at
+    SELECT id, name, created_at
     FROM products
     WHERE (created_at, id) < ($1, $2)
     ORDER BY created_at DESC, id DESC
@@ -461,7 +517,7 @@ if (cursor) {
   params = [createdAt, id, limit];
 } else {
   query = `
-    SELECT id, name, price, created_at
+    SELECT id, name, created_at
     FROM products
     ORDER BY created_at DESC, id DESC
     LIMIT $1
@@ -471,45 +527,44 @@ if (cursor) {
 
 const { rows } = await db.query(query, params);
 
+// Next cursor
 let nextCursor = null;
-
 if (rows.length > 0) {
   const last = rows[rows.length - 1];
-
   nextCursor = Buffer.from(
     JSON.stringify({ createdAt: last.created_at, id: last.id })
   ).toString("base64");
 }
 ```
 
-## Cursor Pagination — MongoDB Implementation
+# 8. MongoDB Implementation
 
-### Decode Cursor
+## Step 1: Decode
 
 ```js
 let createdAt, id;
 
 if (cursor) {
-  const decoded = JSON.parse(Buffer.from(cursor, "base64").toString("utf8"));
+  const decoded = JSON.parse(Buffer.from(cursor, "base64").toString());
   createdAt = new Date(decoded.createdAt);
   id = decoded.id;
 }
 ```
 
-### Build Query
+## Step 2: Filter for Keyset
 
 ```js
-const filter = {};
-
-if (cursor) {
-  filter.$or = [
-    { createdAt: { $lt: createdAt } },
-    { createdAt, _id: { $lt: id } }
-  ];
-}
+const filter = cursor
+  ? {
+      $or: [
+        { createdAt: { $lt: createdAt } },
+        { createdAt, _id: { $lt: id } }
+      ]
+    }
+  : {};
 ```
 
-### Fetch Data
+## Step 3: Query
 
 ```js
 const products = await Product.find(filter)
@@ -517,14 +572,13 @@ const products = await Product.find(filter)
   .limit(limit);
 ```
 
-### Create Next Cursor
+## Step 4: New Cursor
 
 ```js
 let nextCursor = null;
 
 if (products.length > 0) {
   const last = products[products.length - 1];
-
   nextCursor = Buffer.from(
     JSON.stringify({ createdAt: last.createdAt, id: last._id })
   ).toString("base64");
