@@ -98,5 +98,89 @@ To achieve pagination, there are three commonly used methods:
 | Keyset / Seek   | Use `WHERE id > last_id`          | Fast at any scale              | Cannot jump to specific pages like page 50 | Infinite scroll, feeds, large tables        |
 | Cursor (Opaque) | Server returns an encoded cursor  | Best performance + secure      | More code and logic required       | Professional APIs (Meta, Twitter, Stripe)  |
 
+# 3. OFFSET
+
+We use the formula OFFSET = (page − 1) × limit. The page number tells us which slice the client wants, and the limit tells us how many items each slice contains. So when the client asks for page 5 with a limit of 20, we don’t start from the beginning—we simply skip the first 80 rows and return the next 20. This lets the database hand over just enough data to keep the app fast, light, and scroll-friendly.
+
+🔢 Example: page = 5, limit = 20
+
+Formula:
+```
+OFFSET = (page - 1) * limit
+OFFSET = (5 - 1) * 20
+OFFSET = 4 * 20
+OFFSET = 80
+```
+
+Meaning:
+
+Skip the first 80 rows
+
+Return the next 20 rows (rows 81–100)
+
+So Page 5 contains:
+
+Items 81 → 100
+
+🧩 PostgreSQL Implementation
+```
+SELECT *
+FROM orders
+ORDER BY id
+OFFSET 80    -- (page-1)*limit
+LIMIT 20;    -- limit
+```
+
+Backend code (Node.js):
+```
+const page = Number(req.query.page) || 1;
+const limit = Number(req.query.limit) || 20;
+
+const offset = (page - 1) * limit;
+
+const result = await pool.query(
+  "SELECT * FROM orders ORDER BY id OFFSET $1 LIMIT $2",
+  [offset, limit]
+);
+
+res.json(result.rows);
+```
+🍃 MongoDB Implementation
+
+(Mongo uses .skip() + .limit())
+```
+const page = Number(req.query.page) || 1;
+const limit = Number(req.query.limit) || 20;
+
+const skip = (page - 1) * limit;
+
+const orders = await Order.find()
+  .sort({ _id: 1 })
+  .skip(skip)    // OFFSET
+  .limit(limit); // LIMIT
+
+res.json(orders);
+```
+📡 How the Client Sends the Request
+
+Frontend makes a simple GET request:
+```
+GET /orders?page=5&limit=20
+```
+
+Example from frontend JS:
+```
+fetch("/orders?page=5&limit=20")
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+Or using Axios:
+
+```
+axios.get("/orders", {
+  params: { page: 5, limit: 20 }
+});
+```
 
 ---
