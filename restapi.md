@@ -67,6 +67,8 @@ In API design, this ensures that if a request is accidentally sent multiple time
 
 ## 4️⃣ PAGINATION
 
+# 1. Pagination  
+
 Pagination means dividing a large set of records into smaller pieces so that an API can return data quickly and the client (mobile app or website) can display it without lag or crash. Instead of sending thousands or millions of rows in one response, the server returns the data page by page.
 
 A simple way to understand it: if your database has 1 million products and someone calls
@@ -85,5 +87,16 @@ GET /products?page=1&limit=20
 
 This returns only 20 products. The next 20 are on page 2, then page 3, and so on. This keeps the server fast, stable, and scalable while ensuring the client loads data instantly.
 In real systems like Zomato, Amazon, and Flipkart, pagination is necessary because listing endpoints often contain huge datasets, and no device can load everything at once.
+
+# 2. Pagination Methods 
+
+To achieve pagination, there are three commonly used methods:
+
+| Method          | How it works                      | Pros                           | Cons                               | Usage                                      |
+|-----------------|-----------------------------------|--------------------------------|------------------------------------|--------------------------------------------|
+| Offset / Limit  | OFFSET = (page - 1) * limit       | Easiest to implement           | Very slow for large OFFSET (skips rows) | Small apps, admin tools                    |
+| Keyset / Seek   | Use `WHERE id > last_id`          | Fast at any scale              | Cannot jump to specific pages like page 50 | Infinite scroll, feeds, large tables        |
+| Cursor (Opaque) | Server returns an encoded cursor  | Best performance + secure      | More code and logic required       | Professional APIs (Meta, Twitter, Stripe)  |
+
 
 ---
