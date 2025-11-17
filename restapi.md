@@ -277,12 +277,6 @@ Cursor pagination is a technique where the server sends a secure encoded token (
 
 This removes the need for page numbers and prevents problems caused by OFFSET. Cursor pagination is fast, stable, and suitable for large datasets and real-time applications.
 
-# Cursor Pagination — Full Developer Explanation
-
-This document explains cursor pagination in a clear, developer-friendly way using Amazon as an example. It covers client-side flow, server-side flow, why cursor pagination exists, how it solves offset problems, and provides PostgreSQL + MongoDB code examples.
-
----
-
 # 1. How Cursor Pagination Works
 
 Cursor pagination works by using a **position marker** instead of page numbers.  
@@ -343,7 +337,7 @@ This is why Amazon, Instagram, Twitter, etc. **never use OFFSET**.
 
 ---
 
-# 3. Amazon Example — Full Flow
+# 3. Amazon Example
 
 ## User searches "iPhone 14"
 
