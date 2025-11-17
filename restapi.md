@@ -569,3 +569,108 @@ if (products.length > 0) {
 Interview Questions - <a href="https://github.com/sufiyan007/Node-sheet/blob/main/paginationInterviewQ&A%20.md"> LINK </a>
 
 ---
+
+# 5️⃣ Filtering 
+
+Filtering allows the client to request only the subset of data that matches specific conditions. Instead of returning all products, foods, posts, or orders, the server returns only those items that meet the user's selected criteria. This makes APIs faster, lighter, and more useful.
+
+
+## What Filtering Means
+
+Filtering means narrowing down a large dataset based on conditions like:
+
+- price range  
+- category  
+- rating  
+- brand  
+- availability  
+- size  
+- date range  
+
+Example (Amazon search):
+```
+GET /products?category=mobile&brand=samsung&maxPrice=30000&minRating=4
+```
+The client asks only for mobiles from Samsung under ₹30K and rating above 4.
+
+## 🟣 Why Filtering Exists
+
+Without filtering:
+
+- Server fetches **all** products  
+- Network sends huge data  
+- Client UI becomes slow  
+- Pagination becomes incorrect  
+- Database overloaded  
+
+Filtering moves this workload to the backend.
+
+## 🟧 Client Side Explanation
+
+Client (React, Android, iOS) simply sends query parameters based on user selection.
+
+Example:
+```
+GET /products?brand=apple&minPrice=50000&maxPrice=90000&minRating=4
+```
+
+Client responsibilities:
+- send key=value filters  
+- preserve filters during pagination  
+- do not send unnecessary keys  
+- combine with sorting and pagination  
+
+Client does **not** need to understand database logic.
+
+## 🟩 Server Side Explanation
+
+Backend receives:
+```
+/products?category=mobile&brand=samsung&minPrice=20000&maxPrice=30000
+```
+
+Server steps:
+1. Read query params  
+2. Validate them  
+3. Convert into DB filters  
+4. Apply filtering → sorting → pagination  
+5. Return final dataset  
+
+Backend controls how filters map to DB fields.
+
+## 🟦 PostgreSQL Filtering Example
+
+User selects Samsung mobiles under ₹30K:
+```sql
+SELECT * FROM products
+WHERE category = 'mobile'
+AND brand = 'samsung'
+AND price <= 30000
+ORDER BY created_at DESC
+LIMIT 20 OFFSET 0;
+```
+
+## 🟩 MongoDB Filtering Example
+
+```js
+const filter = {}
+
+if (req.query.category) filter.category = req.query.category;
+if (req.query.brand) filter.brand = req.query.brand;
+
+if (req.query.minPrice) {
+  filter.price = { ...filter.price, $gte: Number(req.query.minPrice) }
+}
+if (req.query.maxPrice) {
+  filter.price = { ...filter.price, $lte: Number(req.query.maxPrice) }
+}
+
+if (req.query.minRating) {
+  filter.rating = { $gte: Number(req.query.minRating) }
+}
+
+const products = await Product.find(filter)
+  .sort({ createdAt: -1 })
+  .limit(20)
+```
+---
