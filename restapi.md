@@ -259,19 +259,6 @@ Cursor pagination is the most powerful and modern way of paginating API results.
 Instead of using page numbers (page=1, page=2) or using an ID directly (lastId=500), cursor pagination gives the client a special encoded token called a cursor. 
 This token represents the exact position where the last result ended.
 
-When the client sends the cursor back, the server knows exactly where to continue.
-
-Unlike Offset pagination, cursor pagination does not skip rows.
-Unlike Keyset pagination, cursor pagination does not expose internal IDs.
-It creates a clean, safe bridge between the client and server.
-
-Cursor pagination is used by:
-
-Instagram API
-Meta/Facebook API
-
-
-# 5. Cursor Pagination
 
 Cursor pagination is a technique where the server sends a secure encoded token (called a cursor) to the client after returning a page of results. This cursor represents the exact position of the last item in the current page. When the client wants the next page, it sends this cursor back. The server decodes it, understands where the previous page ended, and continues fetching from that point.
 
