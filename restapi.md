@@ -17,7 +17,7 @@ REST (Representational State Transfer) is a style for designing APIs that are si
 
 ---
 
-# CRUD API Design
+## 2️⃣ CRUD API Design
 
 CRUD represents the four basic operations performed on resources: Create, Read, Update, Delete.  
 A well-designed API organizes these operations using clear resource-based URLs and standard HTTP methods to keep the system predictable, simple, and easy to maintain.
