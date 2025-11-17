@@ -219,6 +219,37 @@ It works especially well for:
 The limitation is that you cannot “jump” to a page number like page 50, because seek pagination is not page-based — it is position-based.  
 But in modern large-scale systems (Zomato, Twitter, Instagram), jumping to page 50 is not needed; users scroll, swipe, or refresh data continuously.
 
-Keyset pagination remains consistent, stable, and fast at any scale, making it the preferred method for modern, high-performance APIs.
+🧩 PostgreSQL Implementation
+API Call
+```
+GET /products?limit=20&lastId=500
+```
+Code:
+```
+const limit = 20;
+const lastId = 500;
+
+const query = `
+  SELECT id, name, price
+  FROM products
+  WHERE id > $1
+  ORDER BY id ASC
+  LIMIT $2
+`;
+
+const result = await db.query(query, [lastId, limit]);
+```
+
+🍃 MongoDB Implementation
+
+```
+const limit = 20;
+
+const products = await Product.find({
+  _id: { $gt: lastId }
+})
+.sort({ _id: 1 })
+.limit(limit);
+```
 
 ---
