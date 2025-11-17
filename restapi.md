@@ -45,3 +45,22 @@ A well-designed API organizes these operations using clear resource-based URLs a
 | Delete User | DELETE | /users/42 | Permanently deletes the user record with ID 42. |
 
 ---
+
+# Idempotency
+
+Idempotency describes an operation that produces the same result no matter how many times it is repeated.  
+In API design, this ensures that if a request is accidentally sent multiple times (because of network retries, browser refresh, or client bugs), the server should not duplicate actions or corrupt data.
+
+## Idempotent vs Non-Idempotent Methods
+
+| HTTP Method | Idempotent | Explanation |
+|-------------|------------|-------------|
+| GET | Yes | Fetching data does not change it. Calling it 1 time or 50 times returns the same resource. |
+| PUT | Yes | Replaces the full resource. Sending the same payload repeatedly results in the same final state. |
+| DELETE | Yes | Deleting the same resource repeatedly ends with the same state: the item is gone. |
+| HEAD | Yes | Similar to GET but without response body. |
+| OPTIONS | Yes | Provides communication options; calling it repeatedly has no side effects. |
+| POST | No | Creates new resources or triggers actions. Repeating it may create duplicates or repeat operations. |
+| PATCH | Not guaranteed | Depends on how the server implements partial updates. |
+
+---
