@@ -54,7 +54,7 @@
 
   <!-- PHASE 3 -->
   <tr>
-    <td><a href="#phase-3">Phase 3</a></td>
+    <td><a href="(https://github.com/sufiyan007/Node-sheet/blob/main/restapi.md)">Phase 3</a></td>
     <td>REST API Design</td>
     <td>
       REST Principles<br>
