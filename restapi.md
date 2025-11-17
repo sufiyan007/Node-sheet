@@ -65,7 +65,7 @@ In API design, this ensures that if a request is accidentally sent multiple time
 
 ---
 
-## 4️⃣ Idempotency
+## 4️⃣ PAGINATION
 
 Pagination means dividing a large set of records into smaller pieces so that an API can return data quickly and the client (mobile app or website) can display it without lag or crash. Instead of sending thousands or millions of rows in one response, the server returns the data page by page.
 
