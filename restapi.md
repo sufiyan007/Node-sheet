@@ -252,4 +252,317 @@ const products = await Product.find({
 .limit(limit);
 ```
 
+
+# 5. Cursor
+
+Cursor pagination is the most powerful and modern way of paginating API results. 
+Instead of using page numbers (page=1, page=2) or using an ID directly (lastId=500), cursor pagination gives the client a special encoded token called a cursor. 
+This token represents the exact position where the last result ended.
+
+When the client sends the cursor back, the server knows exactly where to continue.
+
+Unlike Offset pagination, cursor pagination does not skip rows.
+Unlike Keyset pagination, cursor pagination does not expose internal IDs.
+It creates a clean, safe bridge between the client and server.
+
+Cursor pagination is used by:
+
+Instagram API
+Meta/Facebook API
+
+
+Cursor Pagination — Real Meaning
+
+Every page of data ends with a “last item”.
+Instead of giving the client the raw ID of that last item, the server gives a secure encoded cursor.
+
+Example server response:
+```
+{
+  "data": [...],
+  "nextCursor": "eyJpZCI6IjU2Nzg5YWJjIn0="
+}
+```
+
+This nextCursor string is an encoded version of:
+```
+{ "id": "56789abc" }
+```
+
+The client then calls:
+```
+GET /products?cursor=eyJpZCI6IjU2Nzg5YWJjIn0=&limit=20
+```
+
+And the server decodes the cursor to know:
+
+The last ID
+
+The last timestamp (optional)
+
+Where to continue fetching from
+
+This way:
+
+The client does not know DB IDs
+
+The server never exposes internal structure
+
+Pagination is stable and safe
+
+Cursor pagination = Keyset pagination + secure cursor encoding + client/server handshake
+
+Why Cursor Pagination Exists 
+
+Because real systems have problems like:
+
+New rows inserted while user is scrolling
+
+Rows deleted while user is scrolling
+
+Users on multiple devices with different timelines
+
+Large datasets where OFFSET kills performance
+
+Cursor pagination solves all of them by remembering where the client stopped, not the page number.
+
+Cursor Pagination — Client Side Explanation
+What client receives
+
+Client gets:
+
+data: the page results
+
+nextCursor: a token representing the last item
+
+hasMore: boolean (optional)
+
+next: a link (optional)
+
+What client sends back
+
+Client sends:
+```
+cursor=<encoded_token>
+limit=20
+```
+What client should NOT do
+
+Do not try to decode cursor
+
+Do not modify cursor
+
+Do not assume it is an ID
+
+Do not assume pagination is page-based
+
+Cursor is a black box to the client.
+
+Cursor Pagination — Server Side Explanation
+
+Server tasks:
+
+Encode last item into a cursor
+
+Send cursor to client
+
+Decode cursor on next request
+
+Fetch next rows using Keyset conditions
+
+Generate next cursor for the next batch
+
+Keep sorting stable
+
+Sorting stability means:
+
+Always sort by a consistent pair like created_at DESC, id DESC
+
+If sorting is unstable, cursor pagination breaks.
+
+Cursor Encoding — How It Works (Very Important)
+
+Cursor encoding = converting meaningful data into a safe, opaque string.
+
+Most common encoding formats:
+
+Base64(JSON) → simplest + readable
+
+JWT without signature → structured
+
+Crypto/AES encoded string → secure
+
+Best practice:
+```
+cursor = base64( JSON.stringify({ createdAt, id }) )
+
+
+Example JSON:
+
+{
+  "createdAt": "2025-11-17T10:00:00.000Z",
+  "id": "67584930ab12fe01cd904322"
+}
+
+```
+Encoding:
+```
+eyJjcmVhdGVkQXQiOiIyMDI1LTExLTE3VDEwOjAwOjAwLjAwMFoiLCJpZCI6IjY3NTg0OTMwYWIxMmZlMDFjZDkwNDMyMiJ9
+```
+
+Server receives this cursor and decodes it back.
+
+Node.js decode example:
+```const decoded = JSON.parse(Buffer.from(cursor, 'base64').toString('utf8'));```
+
+
+Now the server knows:
+
+lastCreatedAt
+
+lastId
+
+where to continue
+
+Cursor Pagination — PostgreSQL Version
+Step 1: Decode cursor
+```
+const decoded = cursor
+  ? JSON.parse(Buffer.from(cursor, "base64").toString("utf8"))
+  : null;
+```
+Step 2: Build query
+```
+SELECT id, name, price, created_at
+FROM products
+WHERE (created_at, id) < ($1, $2)
+ORDER BY created_at DESC, id DESC
+LIMIT $3;
+```
+Step 3: Node.js code
+```
+const limit = Number(req.query.limit) || 20;
+const cursor = req.query.cursor;
+
+// Step 1: decode
+let createdAt = null;
+let id = null;
+
+if (cursor) {
+  const decoded = JSON.parse(Buffer.from(cursor, "base64").toString("utf8"));
+  createdAt = decoded.createdAt;
+  id = decoded.id;
+}
+
+// Step 2: build query
+let query, params;
+
+if (cursor) {
+  query = `
+    SELECT id, name, price, created_at
+    FROM products
+    WHERE (created_at, id) < ($1, $2)
+    ORDER BY created_at DESC, id DESC
+    LIMIT $3
+  `;
+  params = [createdAt, id, limit];
+} else {
+  query = `
+    SELECT id, name, price, created_at
+    FROM products
+    ORDER BY created_at DESC, id DESC
+    LIMIT $1
+  `;
+  params = [limit];
+}
+
+const { rows } = await db.query(query, params);
+
+// Step 3: generate next cursor
+let nextCursor = null;
+if (rows.length > 0) {
+  const last = rows[rows.length - 1];
+  nextCursor = Buffer.from(
+    JSON.stringify({ createdAt: last.created_at, id: last.id })
+  ).toString("base64");
+}
+```
+
+This is a COMPLETE professional cursor pagination.
+
+Cursor Pagination — MongoDB Version
+
+Mongo needs the same process.
+
+Step 1: Decode cursor
+```
+let createdAt, id;
+
+if (cursor) {
+  const decoded = JSON.parse(Buffer.from(cursor, "base64").toString("utf8"));
+  createdAt = new Date(decoded.createdAt);
+  id = decoded.id;
+}
+```
+Step 2: Build query
+```
+const filter = {};
+
+if (cursor) {
+  filter.$or = [
+    { createdAt: { $lt: createdAt } },
+    { createdAt, _id: { $lt: id } }
+  ];
+}
+```
+Step 3: Fetch data
+```
+const products = await Product.find(filter)
+  .sort({ createdAt: -1, _id: -1 })
+  .limit(limit);
+```
+Step 4: Create next cursor
+```
+let nextCursor = null;
+if (products.length > 0) {
+  const last = products[products.length - 1];
+  nextCursor = Buffer.from(
+    JSON.stringify({ createdAt: last.createdAt, id: last._id })
+  ).toString("base64");
+}
+```
+
+Missing Concepts You Should Know (Important)
+1. Cursor is position-based
+
+Never page-based.
+
+2. Cursor works even when rows are inserted or deleted
+
+Because it uses stable sorting (id + createdAt).
+
+3. Cursor must be opaque
+
+Clients should not decode it.
+
+4. Cursor cannot jump to page 50
+
+Same as Keyset.
+
+5. Cursor pagination is best for:
+
+infinite scroll
+
+mobile feeds
+
+huge tables
+
+real-time data streams
+
+low-latency APIs
+
+6. Cursor reduces read amplification
+
+DB reads far fewer rows.
+
 ---
