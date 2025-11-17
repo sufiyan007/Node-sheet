@@ -183,4 +183,42 @@ axios.get("/orders", {
 });
 ```
 
+# 4. KEYSET / SEEK
+
+Keyset pagination is a technique where the API fetches the next set of results based on the last item of the previous page instead of skipping rows.  
+Instead of calculating pages like page 1, page 2, page 3, it uses a reference point — usually an ID or a timestamp — to continue from where the last page ended.
+
+A simple way to imagine this:  
+If you scroll Instagram or YouTube, they don’t use page=1, page=2.  
+They load *new results based on the last post you saw.*  
+This is exactly what Keyset pagination does.
+
+Example request:
+
+GET /products?limit=20&lastId=500
+
+This tells the server:
+“Give me the next 20 products *after the item with ID 500*.”
+
+The query becomes optimized:
+```
+SELECT * FROM products
+WHERE id > 500
+ORDER BY id ASC
+LIMIT 20;
+```
+
+Because the database does NOT skip rows (unlike OFFSET), this method is extremely fast even if you have millions of records.
+
+It works especially well for:
+- infinite scroll feeds  
+- real-time apps  
+- large tables with millions of rows  
+- APIs that must stay fast during high traffic  
+
+The limitation is that you cannot “jump” to a page number like page 50, because seek pagination is not page-based — it is position-based.  
+But in modern large-scale systems (Zomato, Twitter, Instagram), jumping to page 50 is not needed; users scroll, swipe, or refresh data continuously.
+
+Keyset pagination remains consistent, stable, and fast at any scale, making it the preferred method for modern, high-performance APIs.
+
 ---
