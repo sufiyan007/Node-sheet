@@ -75,9 +75,7 @@ In API design, this ensures that if a request is accidentally sent multiple time
 | PATCH | Not guaranteed | Depends on how the server implements partial updates. |
 
 </details>
-
 ---
-
 <details>
 <summary><h2>4️⃣ Pagination</h2></summary>
 
@@ -587,11 +585,11 @@ if (products.length > 0) {
 Interview Questions - <a href="https://github.com/sufiyan007/Node-sheet/blob/main/paginationInterviewQ&A%20.md"> LINK </a>
 
 </details>
+---
+
 
 <details>
-<summary><h3>🔹 Filtering</h3></summary>
-
-# 5️⃣ Filtering 
+<summary><h3>4️⃣ Filtering</h3></summary>
 
 Filtering allows the client to request only the subset of data that matches specific conditions. Instead of returning all products, foods, posts, or orders, the server returns only those items that meet the user's selected criteria. This makes APIs faster, lighter, and more useful.
 
@@ -686,8 +684,10 @@ const products = await Product.find(filter)
 ```
 </details>
 
+---
+
 <details>
-<summary><h3>🔹 Sorting</h3></summary>
+<summary><h3>5️⃣ Sorting</h3></summary>
 
 Sorting is the process of arranging data in a specific order before sending it to the client. It allows users to view results in a meaningful way—like highest price, lowest price, newest first, or highest rating. Sorting is performed **after filtering** and **before pagination**, so results stay accurate and consistent.
 
@@ -860,8 +860,10 @@ const products = await Product.find(filter)
 ---
 </details>
 
+--- 
+
 <details>
-<summary><h3>🔹 Searching</h3></summary>
+<summary><h3> 6️⃣ Searching</h3></summary>
 
 
 </details>
