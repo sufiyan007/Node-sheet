@@ -674,3 +674,196 @@ const products = await Product.find(filter)
   .limit(20)
 ```
 ---
+
+## 6️⃣ Sorting
+
+Sorting is the process of arranging data in a specific order before sending it to the client. It allows users to view results in a meaningful way—like highest price, lowest price, newest first, or highest rating. Sorting is performed **after filtering** and **before pagination**, so results stay accurate and consistent.
+
+---
+
+## 🔵 Why Sorting Exists
+
+Without sorting, APIs return results in their default storage order—usually not meaningful for users.  
+Sorting ensures users get data in the order they expect:
+
+- High → low price  
+- Low → high price  
+- Newest → oldest  
+- Highest rating first  
+- Most relevant first  
+
+Example:  
+Searching **“iPhone 14”** on Amazon should show results sorted by the user’s preference, not random order.
+
+## 🟧 How Sorting Works (Client Side)
+
+Client simply sends a query parameter telling the backend how to sort.
+
+Examples:
+
+| User Selection | Query Param |
+|----------------|-------------|
+| Price: Low → High | `?sort=price` |
+| Price: High → Low | `?sort=-price` |
+| Newest First | `?sort=-createdAt` |
+| Oldest First | `?sort=createdAt` |
+| Highest Rated | `?sort=-rating` |
+
+Client responsibility:
+- Only sends sorting instruction  
+- Combines sorting with filters and pagination  
+- Must keep sort value constant during scrolling (cursor pagination)
+
+Client **does not** sort anything itself.
+
+## 🟩 How Sorting Works (Server Side)
+
+Backend receives something like:
+
+```
+GET /products?sort=-price&limit=20&page=1
+```
+
+Server must:
+1. Parse sort param  
+2. Convert to DB syntax  
+3. Combine with filters  
+4. Combine with pagination  
+5. Return sorted dataset  
+
+Sorting MUST occur before pagination.  
+Otherwise, pages will shuffle when sorted.
+
+---
+
+## 🟦 Real Amazon Example — Complete Flow
+
+### 1️⃣ User selects: **Sort by Price → High to Low**
+
+Frontend calls:
+
+```
+GET /search?query=iphone14&sort=-price&page=1&limit=20
+```
+
+### 2️⃣ Backend receives query:
+
+```js
+req.query = {
+  query: "iphone14",
+  sort: "-price",
+  page: "1",
+  limit: "20"
+}
+```
+
+Backend interprets:
+
+- field = price  
+- direction = DESC  
+
+### 3️⃣ Backend converts sorting into SQL or Mongo sorting.
+
+### PostgreSQL converts:
+```
+ORDER BY price DESC
+```
+
+### MongoDB converts:
+```js
+.sort({ price: -1 })
+```
+
+### 4️⃣ Backend executes final DB query
+
+### PostgreSQL:
+
+```sql
+SELECT id, name, price, created_at
+FROM products
+WHERE name ILIKE '%iphone14%'
+ORDER BY price DESC
+LIMIT 20 OFFSET 0;
+```
+
+### MongoDB:
+
+```js
+Product.find({ name: /iphone14/i })
+  .sort({ price: -1 })
+  .limit(20)
+  .skip(0);
+```
+
+###  Database returns sorted rows  
+Backend converts results to JSON and sends them.
+
+
+## 🟨 Sorting Implementation – PostgreSQL + Node.js
+
+### Step 1: Parse the sort parameter
+
+```js
+const sortParam = req.query.sort || "-createdAt";
+
+let sortField = "created_at";
+let sortOrder = "DESC";
+
+if (sortParam.startsWith("-")) {
+  sortField = sortParam.substring(1);
+  sortOrder = "DESC";
+} else {
+  sortField = sortParam;
+  sortOrder = "ASC";
+}
+```
+
+### Step 2: Use it inside SQL
+
+```js
+const sql = `
+  SELECT id, name, price, created_at
+  FROM products
+  ORDERORDER BY ${sortField} ${sortOrder}
+  LIMIT $1 OFFSET $2
+`;
+```
+
+### Step 3: Execute
+
+```js
+const result = await db.query(sql, [limit, offset]);
+res.json(result.rows);
+```
+
+---
+
+## 🟩 Sorting Implementation – MongoDB + Node.js
+
+### Step 1: Build sort object
+
+```js
+let sortObj = {};
+
+if (req.query.sort) {
+  if (req.query.sort.startsWith("-")) {
+    sortObj[req.query.sort.substring(1)] = -1;
+  } else {
+    sortObj[req.query.sort] = 1;
+  }
+} else {
+  sortObj["createdAt"] = -1;
+}
+```
+
+### Step 2: Apply to Mongo query
+
+```js
+const products = await Product.find(filter)
+  .sort(sortObj)
+  .limit(limit)
+  .skip(offset);
+```
+
+---
+
