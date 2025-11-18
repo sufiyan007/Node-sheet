@@ -1110,6 +1110,7 @@ app.post("/user", (req, res) => {
 ```
 
 ## Zod (Basic Example)
+
 ```
 const { z } = require("zod");
 
