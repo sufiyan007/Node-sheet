@@ -1111,7 +1111,7 @@ app.post("/user", (req, res) => {
 
 ## Zod (Basic Example)
 
-```
+```js
 const { z } = require("zod");
 
 const createUserSchema = z.object({
