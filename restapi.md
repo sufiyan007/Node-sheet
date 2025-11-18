@@ -1174,6 +1174,93 @@ A simple story: John downloaded your app last year. His app still expects the us
 
 <details>
 <summary><h2>12. File Uploads</h2></summary>
+File uploading simply means allowing the client (browser, mobile app, Postman) to send a file to the server. In normal APIs we only send JSON, but for file uploads the request contains binary data like images, PDFs, videos, or documents. Node.js cannot handle raw files directly, so we use a middleware called Multer to read the file from the incoming request, temporarily store it, and make it accessible inside req.file. This is helpful if you want to store files locally or process them. However, most modern product-based companies no longer store files on the backend machine. They store them in cloud storage like Amazon S3, because S3 is faster, scalable, durable, and safe. In that setup the flow is: client → Multer receives file → server uploads file to S3 → server returns the URL to the client → client displays or uses the file. File uploading is used in profile pictures, payment receipts, product images, KYC documents, invoices, resumes, etc.
+
+
+Multer (Basic Local Upload Example)
+```js
+const express = require("express");
+const multer = require("multer");
+const app = express();
+
+// Storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+});
+
+const upload = multer({ storage });
+
+app.post("/upload", upload.single("photo"), (req, res) => {
+  return res.json({
+    message: "File uploaded successfully",
+    file: req.file
+  });
+});
+
+app.listen(5000, () => console.log("Server running"));
+```
+
+
+S3 Upload Example
+```js
+const express = require("express");
+const multer = require("multer");
+const AWS = require("aws-sdk");
+
+const app = express();
+const upload = multer();
+
+AWS.config.update({
+  accessKeyId: "YOUR_KEY",
+  secretAccessKey: "YOUR_SECRET",
+  region: "ap-south-1"
+});
+
+const s3 = new AWS.S3();
+
+app.post("/upload", upload.single("photo"), async (req, res) => {
+  const params = {
+    Bucket: "your-bucket-name",
+    Key: Date.now() + "-" + req.file.originalname,
+    Body: req.file.buffer,
+    ACL: "public-read",
+    ContentType: req.file.mimetype
+  };
+
+  const result = await s3.upload(params).promise();
+
+  res.json({
+    message: "Uploaded to S3",
+    url: result.Location
+  });
+});
+
+app.listen(5000, () => console.log("Server running"));
+```
+
+# Important Keywords (3-Year Developer Should Know)
+
+## Multer Concepts
+
+- **multer()** – middleware that handles `multipart/form-data` for file uploads.  
+- **storage** – defines how and where Multer will save the uploaded file.  
+- **diskStorage** – saves files on the server’s local filesystem.  
+- **memoryStorage** – stores the file in RAM as a buffer (recommended for S3 uploads).  
+- **upload.single("photo")** – accepts one file with the field name `"photo"`.  
+- **req.file** – contains uploaded file details: buffer, size, mimetype, filename, etc.
+
+---
+
+## S3 Related Concepts
+
+- **AWS S3** – Amazon’s cloud object storage for reliably saving files.  
+- **Bucket** – top-level storage container where files are stored (like a folder).  
+- **Key** – the unique filename/path inside the bucket.  
+- **Body** – the actual file contents (usually `req.file.buffer`).  
+- **ContentType** – the file’s MIME type (e.g., image/png, application/pdf).  
+- **ACL: "public-read"** – makes the uploaded file accessible through a public URL.  
+- **result.Location** – the final URL returned by S3 where the file can be accessed publicly.
 
 </details>
 
