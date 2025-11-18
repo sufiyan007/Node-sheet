@@ -595,16 +595,6 @@ The client asks only for mobiles from Samsung under ₹30K and rating above 4.
 
 ## 🟣 Why Filtering Exists
 
-Without filtering:
-
-- Server fetches **all** products  
-- Network sends huge data  
-- Client UI becomes slow  
-- Pagination becomes incorrect  
-- Database overloaded  
-
-Filtering moves this workload to the backend.
-
 ## 🟧 Client Side Explanation
 
 Client (React, Android, iOS) simply sends query parameters based on user selection.
@@ -678,22 +668,6 @@ const products = await Product.find(filter)
 ## 6️⃣ Sorting
 
 Sorting is the process of arranging data in a specific order before sending it to the client. It allows users to view results in a meaningful way—like highest price, lowest price, newest first, or highest rating. Sorting is performed **after filtering** and **before pagination**, so results stay accurate and consistent.
-
----
-
-## 🔵 Why Sorting Exists
-
-Without sorting, APIs return results in their default storage order—usually not meaningful for users.  
-Sorting ensures users get data in the order they expect:
-
-- High → low price  
-- Low → high price  
-- Newest → oldest  
-- Highest rating first  
-- Most relevant first  
-
-Example:  
-Searching **“iPhone 14”** on Amazon should show results sorted by the user’s preference, not random order.
 
 ## 🟧 How Sorting Works (Client Side)
 
