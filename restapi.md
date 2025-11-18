@@ -1,4 +1,4 @@
-# REST API Design (FULL COLLAPSIBLE VERSION)
+# REST API Design 
 
 ---
 
@@ -591,7 +591,7 @@ Interview Questions - <a href="https://github.com/sufiyan007/Node-sheet/blob/mai
 ---
 
 <details>
-<summary><h3>4️⃣ Filtering</h3></summary>
+<summary><h2>5️⃣ Filtering</h2></summary>
 
 Filtering allows the client to request only the subset of data that matches specific conditions. Instead of returning all products, foods, posts, or orders, the server returns only those items that meet the user's selected criteria. This makes APIs faster, lighter, and more useful.
 
@@ -689,7 +689,7 @@ const products = await Product.find(filter)
 ---
 
 <details>
-<summary><h3>5️⃣ Sorting</h3></summary>
+<summary><h2>6️⃣ Sorting</h2></summary>
 
 Sorting is the process of arranging data in a specific order before sending it to the client. It allows users to view results in a meaningful way—like highest price, lowest price, newest first, or highest rating. Sorting is performed **after filtering** and **before pagination**, so results stay accurate and consistent.
 
@@ -865,7 +865,7 @@ const products = await Product.find(filter)
 --- 
 
 <details>
-<summary><h3> 6️⃣ Searching</h3></summary>
+<summary><h2>7️⃣ Searching</h2></summary>
 
 
 </details>
