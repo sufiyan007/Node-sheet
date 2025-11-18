@@ -587,6 +587,7 @@ if (products.length > 0) {
 Interview Questions - <a href="https://github.com/sufiyan007/Node-sheet/blob/main/paginationInterviewQ&A%20.md"> LINK </a>
 
 ---
+</details>
 
 <details>
 <summary><h3>🔹 Filtering</h3></summary>
@@ -684,6 +685,7 @@ const products = await Product.find(filter)
   .sort({ createdAt: -1 })
   .limit(20)
 ```
+</details>
 
 <details>
 <summary><h3>🔹 Sorting</h3></summary>
@@ -728,8 +730,6 @@ Server must:
 
 Sorting MUST occur before pagination.  
 Otherwise, pages will shuffle when sorted.
-
----
 
 ## 🟦 Real Amazon Example — Complete Flow
 
@@ -830,8 +830,6 @@ const sql = `
 const result = await db.query(sql, [limit, offset]);
 res.json(result.rows);
 ```
-
----
 
 ## 🟩 Sorting Implementation – MongoDB + Node.js
 
