@@ -1157,9 +1157,9 @@ app.post("/user", (req, res) => {
 
 ---
 
-<summary><h2>Versioning</h2></summary>
 
 <details>
+<summary><h2>11. Versioning</h2></summary>
   
 API versioning means creating different versions of the same API so that old users continue to work without breaking, while new users get updated or improved features. This is important because once an app is live, millions of users depend on your APIs, and changing the structure or behavior suddenly can break older apps. For example, imagine you have an API:
 GET /api/user that returns { name, age }. Later your company decides to add phone number, change field names, or return more data. If you simply change the existing API, older apps will break because they expect the old response format. So instead of modifying it directly, you create a new version:
