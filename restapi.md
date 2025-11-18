@@ -1177,7 +1177,7 @@ A simple story: John downloaded your app last year. His app still expects the us
 File uploading simply means allowing the client (browser, mobile app, Postman) to send a file to the server. In normal APIs we only send JSON, but for file uploads the request contains binary data like images, PDFs, videos, or documents. Node.js cannot handle raw files directly, so we use a middleware called Multer to read the file from the incoming request, temporarily store it, and make it accessible inside req.file. This is helpful if you want to store files locally or process them. However, most modern product-based companies no longer store files on the backend machine. They store them in cloud storage like Amazon S3, because S3 is faster, scalable, durable, and safe. In that setup the flow is: client → Multer receives file → server uploads file to S3 → server returns the URL to the client → client displays or uses the file. File uploading is used in profile pictures, payment receipts, product images, KYC documents, invoices, resumes, etc.
 
 
-Multer (Basic Local Upload Example)
+## Multer (Basic Local Upload Example)
 ```js
 const express = require("express");
 const multer = require("multer");
@@ -1202,7 +1202,7 @@ app.listen(5000, () => console.log("Server running"));
 ```
 
 
-S3 Upload Example
+## S3 Upload Example
 ```js
 const express = require("express");
 const multer = require("multer");
