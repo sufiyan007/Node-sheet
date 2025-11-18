@@ -874,7 +874,6 @@ const products = await Product.find(filter)
 
 <details>
 <summary><h2>8️⃣ Request & Response Structure</h2></summary>
-# Request–Response Explanation (Simple and Clear)
 
 When a user enters a URL on the client side (browser or mobile app), the browser creates an HTTP Request.  
 This request contains the method (GET/POST), the path (like `/orders`), headers (such as Authorization), and sometimes a body (mainly for POST requests).
@@ -1072,7 +1071,6 @@ Very important for debugging questions.
 
 <details>
 <summary><h2>🔟 Validation (JOI / Zod)</h2></summary>
-# Validation (Zod + Joi) — Short, Interview-Focused Guide
 
 Validation means checking that incoming data (body, query, params) is correct before the server uses it.  
 If data is wrong → return **400 Bad Request** instead of letting the server crash.
