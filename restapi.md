@@ -1151,7 +1151,7 @@ app.post("/user", (req, res) => {
 
 # Example
 
-When a backend does not use validation, it simply trusts whatever data the client sends, which can immediately break logic or corrupt the database. For example, imagine a signup API that expects a user’s name, email, and age. John accidentally enters "twenty" instead of 20 for the age field. Without validation, the backend receives age: "twenty" and tries to store it or run calculations like checking if the user is above 18. Since age is a string instead of a number, the backend might crash with errors like “cannot compare string to number”, or it might store "twenty" in the database, causing future queries to fail. In some cases, the server may even try to do math on this value, leading to NaN or broken business logic. And if John forgets to send the email field entirely, the backend may still try to create the user, causing null values or database constraint failures. These issues happen because the backend never checked whether the incoming data was valid. With validation (using Zod or Joi), the backend would immediately reject the request with a clear 400 error, telling John that the age must be a number and the email is required, preventing bad data from ever reaching the core logic.
+  When a backend does not use validation, it simply trusts whatever data the client sends, which can immediately break logic or corrupt the database. For example, imagine a signup API that expects a user’s name, email, and age. John accidentally enters "twenty" instead of 20 for the age field. Without validation, the backend receives age: "twenty" and tries to store it or run calculations like checking if the user is above 18. Since age is a string instead of a number, the backend might crash with errors like “cannot compare string to number”, or it might store "twenty" in the database, causing future queries to fail. In some cases, the server may even try to do math on this value, leading to NaN or broken business logic. And if John forgets to send the email field entirely, the backend may still try to create the user, causing null values or database constraint failures. These issues happen because the backend never checked whether the incoming data was valid. With validation (using Zod or Joi), the backend would immediately reject the request with a clear 400 error, telling John that the age must be a number and the email is required, preventing bad data from ever reaching the core logic.
 
 </details>
 
@@ -1159,12 +1159,13 @@ When a backend does not use validation, it simply trusts whatever data the clien
 
 <summary><h2> <b>11</b> Versioning</h2></summary>
 
-API versioning means creating different versions of the same API so that old users continue to work without breaking, while new users get updated or improved features. This is important because once an app is live, millions of users depend on your APIs, and changing the structure or behavior suddenly can break older apps. For example, imagine you have an API:
-GET /api/user that returns { name, age }. Later your company decides to add phone number, change field names, or return more data. If you simply change the existing API, older apps will break because they expect the old response format. So instead of modifying it directly, you create a new version:
-GET /api/v2/user.
-Now older users continue using /api/v1/user without issues, and newer apps use /api/v2/user with the updated design.
-
-A simple story: John downloaded your app last year. His app still expects the user data in the old format { name, age }. But you release a new app update this year that uses { fullName, age, phone }. If your backend changes the original API response, John’s old app will crash because it doesn’t understand the new fields. But with versioning, John’s old app continues calling /api/v1/user, which still returns the old structure. New users or updated apps call /api/v2/user, which returns the improved structure. This way, you can upgrade your backend without breaking John’s experience. Versioning keeps your API safe, stable, backward-compatible, and future-ready.
+<details>
+  API versioning means creating different versions of the same API so that old users continue to work without breaking, while new users get updated or improved features. This is important because once an app is live, millions of users depend on your APIs, and changing the structure or behavior suddenly can break older apps. For example, imagine you have an API:
+  GET /api/user that returns { name, age }. Later your company decides to add phone number, change field names, or return more data. If you simply change the existing API, older apps will break because they expect the old response format. So instead of modifying it directly, you create a new version:
+  GET /api/v2/user.
+  Now older users continue using /api/v1/user without issues, and newer apps use /api/v2/user with the updated design.
+  
+  A simple story: John downloaded your app last year. His app still expects the user data in the old format { name, age }. But you release a new app update this year that uses { fullName, age, phone }. If your backend changes the original API response, John’s old app will crash because it doesn’t understand the new fields. But with versioning, John’s old app continues calling /api/v1/user, which still returns the old structure. New users or updated apps call /api/v2/user, which returns the improved structure. This way, you can upgrade your backend without breaking John’s experience. Versioning keeps your API safe, stable, backward-compatible, and future-ready.
 
 </details>
 
