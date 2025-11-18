@@ -1171,3 +1171,24 @@ A simple story: John downloaded your app last year. His app still expects the us
 </details>
 
 ---
+
+<details>
+<summary><h2>12. File Uploads</h2></summary>
+
+</details>
+
+---
+
+<details>
+<summary><h2>13. Error Handling</h2></summary>
+
+</details>
+
+---
+
+<details>
+<summary><h2>14. caching- Redis</h2></summary>
+
+</details>
+
+---
