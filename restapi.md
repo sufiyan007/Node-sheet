@@ -1134,6 +1134,21 @@ app.post("/user", (req, res) => {
 });
 ```
 
+# Is validation only for login/signup?
+
+  No.
+  Validation is needed for every API where user sends data.
+
+  Examples:
+  
+    You must use validation for:
+    signup
+    login
+    create order
+    update address
+    upload product
+    every POST / PUT request
+
 </details>
 
 ---
