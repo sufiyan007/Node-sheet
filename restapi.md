@@ -949,3 +949,123 @@ app.listen(5000, () => console.log("Server running on port 5000"));
 </details>
 
 ---
+
+<details>
+<summary><h2>9️⃣ Status code</h2></summary>
+
+HTTP status codes are short numerical codes that the server sends back to the client to describe the result of the request.  
+They help the client understand whether the request succeeded, failed, or needs some correction.  
+Every response from a server includes a status code along with the actual data (if any).
+
+Think of status codes as the "final message" from the server:
+- Did the request work?
+- Was the user not allowed?
+- Was something missing?
+- Did the server itself crash?
+
+## Categories of HTTP Status Codes
+
+### 1. **100–199: Informational**
+The server received the request and is still processing it.  
+Mostly internal; clients rarely need to care.
+
+### 2. **200–299: Success**
+The request completed successfully.  
+Common examples:
+- **200 OK** → Everything worked, data returned normally  
+- **201 Created** → A new resource was created (e.g., new user, new order)  
+- **204 No Content** → Request succeeded but no data returned  
+
+### 3. **300–399: Redirection**
+The client is told to go to another URL.  
+Examples:
+- **301 Moved Permanently**  
+- **302 Found (Temporary redirect)**  
+
+### 4. **400–499: Client Errors**
+Request is incorrect from the client side (bad input, missing fields, no permission).  
+Examples:
+- **400 Bad Request** → Missing data, wrong format  
+- **401 Unauthorized** → Login/token required  
+- **403 Forbidden** → Token is valid but user is not allowed  
+- **404 Not Found** → URL or resource does not exist  
+- **409 Conflict** → Duplicate data (like trying to register with an existing email)  
+
+### 5. **500–599: Server Errors**
+The server failed while processing the request.  
+Examples:
+- **500 Internal Server Error** → Unexpected error in server code  
+- **502 Bad Gateway** → Server received an invalid response from another service  
+- **503 Service Unavailable** → Server is down or overloaded  
+
+## How the Status Code Fits Into Request–Response Flow
+
+- Client sends request  
+- Server processes request  
+- Server selects the appropriate status code  
+- Server sends status code + JSON back to client  
+- Client decides how to display the result  
+
+Example:
+- If request is correct → `200 OK`  
+- If user not logged in → `401 Unauthorized`  
+- If user tries to access something they shouldn’t → `403 Forbidden`  
+- If server crashes → `500 Internal Server Error`  
+
+## Node.js Example With Status Codes
+
+```js
+app.get("/orders", (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: "Login required" });
+  }
+
+  const orders = [
+    { id: 1, item: "Pizza" },
+    { id: 2, item: "Burger" }
+  ];
+
+  res.status(200).json({
+    success: true,
+    data: orders
+  });
+});
+```
+
+# Important HTTP Status Codes (Interview Focused)
+
+## Success (200 Range)
+
+**200 OK** – Request succeeded; returns data.  
+**201 Created** – New resource created (e.g., new user, new order).  
+**204 No Content** – Success but no response body (used after update/delete).
+
+---
+
+## Client Errors (400 Range)
+
+These are the most asked in interviews.
+
+**400 Bad Request** – Client sent invalid data (wrong body, missing fields).  
+**401 Unauthorized** – Authentication required (token missing/invalid).  
+**403 Forbidden** – Authenticated but not allowed (permission issue).  
+**404 Not Found** – Route or resource does not exist.  
+**409 Conflict** – Duplicate or conflicting data (email already exists).  
+**422 Unprocessable Entity** – Validation error (common in REST APIs).
+
+---
+
+## Server Errors (500 Range)
+
+Very important for debugging questions.
+
+**500 Internal Server Error** – Unexpected failure in server logic.  
+**502 Bad Gateway** – Server got an invalid response from another service.  
+**503 Service Unavailable** – Server down or overloaded.  
+**504 Gateway Timeout** – Upstream service did not respond in time.
+
+</details>
+
+---
