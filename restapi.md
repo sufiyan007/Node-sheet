@@ -75,7 +75,9 @@ In API design, this ensures that if a request is accidentally sent multiple time
 | PATCH | Not guaranteed | Depends on how the server implements partial updates. |
 
 </details>
+
 ---
+
 <details>
 <summary><h2>4️⃣ Pagination</h2></summary>
 
@@ -585,8 +587,8 @@ if (products.length > 0) {
 Interview Questions - <a href="https://github.com/sufiyan007/Node-sheet/blob/main/paginationInterviewQ&A%20.md"> LINK </a>
 
 </details>
----
 
+---
 
 <details>
 <summary><h3>4️⃣ Filtering</h3></summary>
