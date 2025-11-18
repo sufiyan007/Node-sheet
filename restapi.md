@@ -872,3 +872,80 @@ const products = await Product.find(filter)
 
 ---
 
+<details>
+<summary><h2>8️⃣ Request & Response Structure</h2></summary>
+# Request–Response Explanation (Simple and Clear)
+
+When a user enters a URL on the client side (browser or mobile app), the browser creates an HTTP Request.  
+This request contains the method (GET/POST), the path (like `/orders`), headers (such as Authorization), and sometimes a body (mainly for POST requests).
+
+For example, if the user opens:
+`https://zomato.com/api/orders`,  
+the app is asking the backend server to return the user’s order history.
+
+The request travels to the server.  
+The server receives it, checks which route should handle the request, and reads any query parameters, headers, or request body.  
+Then the server performs its logic — validating input, checking authentication, reading from a database, and preparing the final output.
+
+Once processing is done, the server sends an HTTP Response back to the client.  
+This response usually includes a status code and some JSON data.  
+The client then uses this JSON to display the final result on the screen.
+
+In simple terms:  
+client asks → server processes → server replies → client displays.
+
+---
+
+## Basic Flow
+
+- Client enters a URL or performs an action  
+- Browser/app builds and sends the Request  
+- Server receives the Request  
+- Server matches the route  
+- Server performs its logic (validation, DB, etc.)  
+- Server sends a Response  
+- Client displays the result  
+
+---
+
+## Example (Node.js + Express)
+
+Suppose the user opens this URL:
+
+`http://localhost:5000/orders?limit=2`
+
+```js
+const express = require("express");
+const app = express();
+
+app.get("/orders", (req, res) => {
+  const limit = parseInt(req.query.limit) || 5;
+
+  const allOrders = [
+    { id: 1, item: "Pizza", price: 200 },
+    { id: 2, item: "Burger", price: 150 },
+    { id: 3, item: "Pasta", price: 300 }
+  ];
+
+  const finalOrders = allOrders.slice(0, limit);
+
+  res.json({
+    success: true,
+    data: finalOrders
+  });
+});
+
+app.listen(5000, () => console.log("Server running on port 5000"));
+```
+
+# What Happens Internally:
+  Client sends GET request to /orders?limit=2
+  Express finds the matching route
+  Server reads the limit query value
+  Server prepares the order data
+  Server sends JSON response
+  Client receives it and displays the list
+
+</details>
+
+---
