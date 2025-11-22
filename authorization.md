@@ -15,7 +15,14 @@ const token = jwt.sign(
   { expiresIn: "1h" }
 );
 ```
+The client stores this token and sends it in the Authorization header. The backend verifies it using middleware:
 
+```js
+const token = req.header("Authorization")?.split(" ")[1];
+const decoded = jwt.verify(token, "SECRET123");
+req.user = decoded;
+next();
+```
 If anything goes wrong, the server rejects the request with a 401 response. In summary, Authorization: Bearer <token> means: “Here is my authentication token. Verify it and allow access if valid.” It is the backbone of modern API authentication used across all major companies due to its speed, security, scalability, and simplicity.
 
 ---
