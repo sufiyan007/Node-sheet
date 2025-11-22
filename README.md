@@ -76,7 +76,7 @@
 
   <!-- PHASE 4 -->
   <tr>
-    <td><a href="#phase-4">Phase 4</a></td>
+    <td><a href="https://github.com/sufiyan007/Node-sheet/blob/main/authorization.md">Phase 4</a></td>
     <td>Auth & Authorization</td>
     <td>
       JWT<br>
