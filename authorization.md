@@ -39,6 +39,7 @@ A simple analogy: the access token is like a movie ticket that expires after one
 
 Below is the essential backend code for refresh tokens. On login, you generate two tokens:
 
+```
 const accessToken = jwt.sign(
   { id: user._id },
   "ACCESS_SECRET",
@@ -50,10 +51,11 @@ const refreshToken = jwt.sign(
   "REFRESH_SECRET",
   { expiresIn: "7d" }
 );
-
+```
 
 The refresh token is usually stored in a secure HTTPOnly cookie or saved in the database for revocation. When the client’s access token expires, it calls /refresh with the refresh token:
 
+```
 app.post("/refresh", (req, res) => {
   const token = req.cookies.refreshToken;
 
