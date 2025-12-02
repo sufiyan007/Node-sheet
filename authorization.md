@@ -39,7 +39,7 @@ A simple analogy: the access token is like a movie ticket that expires after one
 
 Below is the essential backend code for refresh tokens. On login, you generate two tokens:
 
-```
+```js
 const accessToken = jwt.sign(
   { id: user._id },
   "ACCESS_SECRET",
@@ -55,7 +55,7 @@ const refreshToken = jwt.sign(
 
 The refresh token is usually stored in a secure HTTPOnly cookie or saved in the database for revocation. When the client’s access token expires, it calls /refresh with the refresh token:
 
-```
+```js
 app.post("/refresh", (req, res) => {
   const token = req.cookies.refreshToken;
 
@@ -75,5 +75,98 @@ app.post("/refresh", (req, res) => {
     return res.status(401).json({ msg: "Invalid refresh token" });
   }
 });
+
+```
+
+---
+
+## 3️⃣ Password Hashing
+
+In every modern application—whether it’s Instagram, Amazon, or a banking app—one of the most critical responsibilities of the backend is protecting user passwords. Passwords are the gateway to the user’s identity, personal data, and financial accounts, so the backend must never store them in plain text. If a hacker somehow gains access to the database, raw passwords would immediately expose every user’s account, and even worse, the attacker could use those same passwords on other websites. To prevent this, systems use password hashing, a cryptographic process that transforms real passwords into irreversible, scrambled strings.
+
+When a user signs up, the backend takes their password and runs it through a hashing algorithm like bcrypt or argon2. These algorithms apply a one-way mathematical function designed so that you can convert a password into a hash, but you can never convert a hash back into the original password. This makes hashing the core defense mechanism of authentication systems. Instead of saving “Sufiyan@123”, the database stores something like:
+$2b$10$8xkJwnP4dGuj/UDQnJkO7eSOuHtB.vMnzY.....
+This hashed value is completely useless to anyone who steals the data, because even supercomputers cannot recover the original password from it.
+
+But hashing alone isn’t enough. Modern hashing systems add a random, unique string called a salt, which is automatically included by algorithms like bcrypt. The salt ensures that even if two users have the same password, their hashes will be completely different. This protects against rainbow table attacks, where attackers try to match known hashes with known passwords. Because the salt makes every hash unique, rainbow tables become useless. Salting, combined with slow hashing algorithms, ensures that brute-force and GPU attacks become extremely costly for attackers.
+
+When the user later logs in, the backend doesn’t decrypt anything. Instead, it takes the password the user enters, hashes it again using the same hashing algorithm and the stored salt, and compares that new hash with the stored one. If both hashes match, the user is authenticated. At no point does the backend ever know or store the original password; it simply compares hashes. If the password is wrong, the computed hash won’t match the stored hash, and the login fails.
+
+This entire system is stateless, lightweight, and secure. Even if your entire database leaks, attackers gain nothing but cryptographic garbage. This is why bcrypt and argon2 are trusted by companies like Netflix, Meta, Google, and PayPal. The backend protects the user without ever touching the real password.
+
+Below is the Node.js code that handles hashing and comparing passwords using bcrypt, the industry standard.
+
+🔹 Hashing Password During Signup
+
+```js
+
+import bcrypt from "bcrypt";
+
+// Takes user's raw password and hashes it before saving
+async function hashPassword(password) {
+  const saltRounds = 10; // Higher value = stronger + slower
+  const hashed = await bcrypt.hash(password, saltRounds);
+  return hashed; // This is what you store in DB
+}
+
+```
+
+🔹 Comparing Password During Login
+
+```js
+import bcrypt from "bcrypt";
+
+// Compares user entered password with the stored hash
+async function verifyPassword(enteredPassword, storedHash) {
+  const isMatch = await bcrypt.compare(enteredPassword, storedHash);
+  return isMatch; // true or false
+}
+
+```
+
+🔹 Complete Signup + Login Example
+
+```js
+import express from "express";
+import bcrypt from "bcrypt";
+
+const app = express();
+app.use(express.json());
+
+// Mock DB
+let users = [];
+
+// SIGNUP
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  users.push({
+    email,
+    password: hashedPassword,
+  });
+
+  res.json({ message: "User created" });
+});
+
+// LOGIN
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = users.find((u) => u.email === email);
+  if (!user) return res.status(400).json({ message: "User not found" });
+
+  const isValid = await bcrypt.compare(password, user.password);
+
+  if (!isValid)
+    return res.status(401).json({ message: "Invalid password" });
+
+  res.json({ message: "Login successful" });
+});
+
+app.listen(5000, () => console.log("Server running on Port: 5000"));
+
+```
 
 ---
