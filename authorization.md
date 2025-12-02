@@ -360,3 +360,86 @@ app.get("/logout", (req, res) => {
 ```
 
 ---
+
+## 6️⃣ RBAC — Role-Based Access Control 
+
+RBAC is a security method where you give permissions based on roles, not individual users.
+Instead of deciding what every single user can do, you create roles like:
+
+  Admin
+  Manager
+  User
+  Guest
+
+Each role has its own set of permissions.
+Then you simply assign a user to a role, and they automatically get all the permissions that role contains.
+
+Example:
+An Admin can delete users, edit settings, and view everything.
+A User can read their own data but cannot delete anyone.
+A Guest can only view public information.
+
+This makes the system simpler, secure, and easier to maintain, because you manage roles, not individual users.
+
+```js
+function checkRole(allowedRoles) {
+  return (req, res, next) => {
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    next();
+  };
+}
+
+// usage:
+app.get("/admin", checkRole(["admin"]), (req, res) => {
+  res.send("Admin dashboard");
+});
+
+app.get("/profile", checkRole(["admin", "user"]), (req, res) => {
+  res.send("User profile");
+});
+
+```
+
+---
+
+## 6️⃣ Authorization Header
+
+The Authorization header is the mechanism a client uses to prove its identity when accessing protected backend resources. Whenever a user logs into an application, the server issues an authentication token—most commonly a JWT—which represents the user’s verified identity. On every subsequent request to any protected API, the frontend attaches this token inside the Authorization header so the server can validate who is making the call. The header typically follows the industry-standard format Authorization: Bearer <token>, where Bearer indicates that the token holder is treated as the authenticated user. Internally, the server extracts this token, verifies its integrity and expiration, and, if valid, attaches the decoded user information to the request context. If the header is missing, empty, invalid, or expired, the server immediately rejects the request with an unauthorized response. This is how modern systems maintain secure, stateless user identification across all API calls without storing session data on the backend.
+
+```js
+// Middleware to authenticate using the Authorization header
+import jwt from "jsonwebtoken";
+
+function authMiddleware(req, res, next) {
+  const header = req.headers.authorization;
+
+  if (!header) {
+    return res.status(401).json({ message: "Authorization header missing" });
+  }
+
+  const token = header.split(" ")[1]; // extracts the Bearer token
+
+  try {
+    const decoded = jwt.verify(token, "SECRET123");
+    req.user = decoded; // attach user info
+    next(); // user authenticated
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+}
+
+export default authMiddleware;
+
+```
+
+How It’s Used in Routes
+```js
+app.get("/dashboard", authMiddleware, (req, res) => {
+  res.json({ message: "Access granted", user: req.user });
+});
+
+```
+
+---
