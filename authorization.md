@@ -170,3 +170,108 @@ app.listen(5000, () => console.log("Server running on Port: 5000"));
 ```
 
 ---
+
+## 4️⃣ Cookies / Sessions
+
+When a user interacts with a web application like Amazon, Flipkart, Netflix, or any typical browser-based system, the backend must maintain the user’s identity across multiple requests. This is because HTTP is a stateless protocol, meaning the server does not remember anything about the client after sending a response. Without a memory mechanism, the user would technically be treated as a “new visitor” on every click—losing login state, cart items, preferences, and even the browsing flow. To solve this, web systems use a combination of cookies and sessions, where the cookie lives on the browser and the session lives on the server. This duo allows a website to “remember” who the user is without exposing sensitive data directly.
+
+A cookie is simply a small piece of text data stored in the user's browser. Whenever the server wants the browser to remember something, it sends a Set-Cookie header, and from that point on, the browser automatically attaches that cookie with every request. Cookies can store small information like dark-mode preference, language selection, A/B testing groups, or importantly, the session identifier that connects the browser to its server-side session. Cookies, however, run a security risk if misconfigured, because they are stored on the client side and can be stolen or manipulated through attacks like XSS. That’s why secure flags are crucial.
+Important flags include:
+        HttpOnly, so JavaScript cannot read the cookie;
+        Secure, so it is transmitted only over HTTPS;
+        SameSite, to block CSRF attempts;
+
+Max-Age, controlling how long the cookie stays valid.
+With these flags correctly configured, the cookie becomes a safe and reliable transport mechanism for session identification.
+
+Sessions operate on the opposite side—server-side. When a user logs in successfully, the backend creates a session object containing key data such as the user ID, role, cart items, and any additional context required to identify or serve that user. This session object is not stored in the browser; instead, it lives in the server memory or a session store like Redis. The server then generates a unique session ID, stores the full session data mapped to that ID, and sends only this tiny session ID to the browser via a cookie. Whenever the browser makes a new request, it automatically sends the sessionId cookie, and the server looks up the corresponding session data. If found, the server knows exactly who is making the request and continues the user’s flow. If the session is missing or expired, the user is treated as logged out.
+
+This model provides strong security because sensitive user information like passwords, role, or cart contents never travel to the client. Only the session ID—a harmless identifier—is stored in the cookie. If a hacker steals the database, they only get session objects without the ability to connect them to specific browsers. If they steal a cookie that lacks security flags, they might hijack sessions, which is why proper cookie security is mandatory. Logging out is also simple: the backend just deletes the session from storage, and the browser’s cookie becomes useless. This separation of responsibilities—cookies for identity transport and sessions for secure state management—is why cookie-session architecture has remained the backbone of login systems for the last 25 years.
+
+A simple analogy is a hotel system. When you check in, the hotel stores all your booking information in their computer (the session). They then give you a room key card (the cookie). The key card does not store your booking—it simply identifies you. When you swipe it at your door, the hotel system looks up your session. If your booking is valid, the door opens. If the booking is removed (logout), the card stops working. This perfectly mirrors how cookies and sessions work inside a backend system.
+
+To bring everything together, here is the complete Node.js implementation that shows login, session creation, cookie generation, access to protected routes, and logout functionality, demonstrating the full lifecycle.
+
+```js
+
+import express from "express";
+import cookieParser from "cookie-parser";
+import { v4 as uuid } from "uuid";
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+
+// basic in-memory store (use Redis in real systems)
+const sessionStore = {};
+
+app.use((req, res, next) => {
+  const sessionId = req.cookies.sessionId;
+
+  if (sessionId && sessionStore[sessionId]) {
+    req.sessionData = sessionStore[sessionId];
+  } else {
+    req.sessionData = null;
+  }
+
+  next();
+});
+
+function createSession(userId) {
+  const sessionId = uuid();
+  sessionStore[sessionId] = {
+    userId,
+    createdAt: Date.now(),
+  };
+  return sessionId;
+}
+
+// LOGIN
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === "demo@mail.com" && password === "123456") {
+    const sessionId = createSession("USER_001");
+
+    res.cookie("sessionId", sessionId, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    });
+
+    return res.json({ msg: "Logged in" });
+  }
+
+  res.status(401).json({ msg: "Invalid credentials" });
+});
+
+// PROTECTED ROUTE
+app.get("/profile", (req, res) => {
+  if (!req.sessionData) {
+    return res.status(401).json({ msg: "Not logged in" });
+  }
+
+  res.json({
+    msg: "Profile data",
+    userId: req.sessionData.userId,
+  });
+});
+
+// LOGOUT
+app.post("/logout", (req, res) => {
+  const sessionId = req.cookies.sessionId;
+
+  if (sessionId) {
+    delete sessionStore[sessionId];
+  }
+
+  res.clearCookie("sessionId");
+  res.json({ msg: "Logged out" });
+});
+
+app.listen(5000, () => console.log("Server running on port 5000"));
+
+```
+
+---
