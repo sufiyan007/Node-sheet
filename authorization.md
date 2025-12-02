@@ -275,3 +275,88 @@ app.listen(5000, () => console.log("Server running on port 5000"));
 ```
 
 ---
+
+## 5️⃣ OAuth
+
+In modern web and mobile applications, users prefer signing in with Google, GitHub, Facebook, or Apple instead of creating new accounts everywhere. The technology that allows this secure “Login with Google” experience is OAuth. The problem OAuth solves is simple: How can your app use someone’s Google identity without ever seeing their Google password? Before OAuth existed, apps used to ask users directly for their Google or Facebook passwords, which was extremely unsafe. OAuth fixes this by allowing Google to handle the login while your app receives only a safe, temporary token instead of the password.
+
+When the user clicks “Login with Google,” your app does not handle the login itself. Instead, it redirects the user to Google’s official login page, where the user enters their password safely. Then Google asks the user, “Do you allow this app to access your profile and email?” If the user accepts, Google sends your app a short authorization code. This code is not the login—it is just a temporary slip. Your backend then exchanges this code with Google’s servers to receive an access token, which allows your app to fetch the user's profile data. During this entire process, your app never touches the password; it only receives permission to access basic information. This makes OAuth both safe for users and convenient for developers.
+
+To make it clearer, imagine giving a valet your car. You don’t hand the valet your house keys, wallet, or personal stuff—only the car key they need. OAuth works the same way: instead of giving your Google password to an app, you give it a temporary permission slip issued by Google, allowing it to access only what you agreed to. This keeps the user safe and simplifies login for your app.
+
+# Node.js OAuth Example 
+Below is a very minimal Google OAuth example using Passport. 
+
+```js
+npm install express passport passport-google-oauth20 cookie-session
+```
+
+# Server and Basic Setup
+```js
+import express from "express";
+import passport from "passport";
+import GoogleStrategy from "passport-google-oauth20";
+import cookieSession from "cookie-session";
+
+const app = express();
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["SECRET123"],
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+```
+
+# Google OAuth Strategy
+
+```js
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: "GOOGLE_CLIENT_ID",
+      clientSecret: "GOOGLE_CLIENT_SECRET",
+      callbackURL: "/auth/google/callback",
+    },
+    (accessToken, refreshToken, profile, done) => {
+      return done(null, profile);
+    }
+  )
+);
+
+```
+
+# Auth Routes (Login, Callback, Profile, Logout)
+```js
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => res.redirect("/profile")
+);
+
+app.get("/profile", (req, res) => {
+  if (!req.user) return res.status(401).json({ msg: "Not logged in" });
+  res.json(req.user);
+});
+
+app.get("/logout", (req, res) => {
+  req.logout(() => {});
+  req.session = null;
+  res.json({ msg: "Logged out" });
+});
+
+```
+
+---
