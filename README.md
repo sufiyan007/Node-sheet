@@ -109,7 +109,7 @@
 
   <!-- PHASE 6 -->
   <tr>
-    <td><a href="#phase-6">Phase 6</a></td>
+    <td><a href="(https://github.com/sufiyan007/Node-sheet/blob/main/caching.md)">Phase 6</a></td>
     <td>Caching</td>
     <td>
       Redis<br>
